@@ -1,0 +1,43 @@
+version: "v-1.0.1"
+services:
+    db:
+        image: mongo
+        container_name: db
+        restart: always
+        volumes:
+            - data:/data/db
+        ports:
+            - 9017:27017
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=2o%K)&z\TQ0dmD.2.a`A.MB^?MneXxsf
+    backend:
+        image: backend
+        build: .
+        container_name: backend
+        env_file: .env
+        environment:
+            - NODE_ENV=production
+        # labels:
+        #     - "traefik.enable=true"
+        #     - "traefik.data.frontend.rule=Host:backend.io"
+        #     - "traefik.data.port=3000"
+        volumes:
+            - storage:/usr/src/app/storage
+
+        depends_on:
+            - db
+        ports:
+            - 80:4000
+volumes:
+    data:
+    storage:
+networks:
+    default:
+        external:
+            name: traefik
+
+# docker-compose down 
+# docker rmi backend
+# docker-compose build --no-cache
+# docker-compose up -d
