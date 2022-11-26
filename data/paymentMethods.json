@@ -1,0 +1,18 @@
+{
+    "apple": {
+        "name": "apple",
+        "description": "apple pay method"
+    },
+    "google": {
+        "name": "google",
+        "description": "google pay method"
+    },
+    "paypal": {
+        "name": "paypal",
+        "description": "paypal pay method"
+    },
+    "stripe": {
+        "name": "stripe",
+        "description": "stripe pay method"
+    }
+}

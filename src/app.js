@@ -1,14 +1,15 @@
 //require("dotenv").config();
-require("./routes/index");
-require("./swagger");
+//require("./routes/index");
+//require("./swagger");
+
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.js');
-const connectDB = require('../db/db.js');
-const cors = require('cors');
 const path = require('path');
+const cors = require('cors');
+const connectDB = require('../db/db.js');
 const morgan = require('morgan');
 const { SERVER } = require('./config');
 
@@ -48,7 +49,7 @@ app.use(express.json({ extended: true }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Import routes
-//app.use(require('./routes/index'));
+app.use(require('./routes/index'));
 
 // Front in react
 app.get('*', (req, res) => {
