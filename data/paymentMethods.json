@@ -14,5 +14,9 @@
     "stripe": {
         "name": "stripe",
         "description": "stripe pay method"
+    },
+    "insuranceCompany":{
+        "name": "insurance company",
+        "description": "Insurance company"
     }
 }

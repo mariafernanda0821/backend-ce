@@ -12,7 +12,8 @@ const schema = mongoose.Schema({
     description: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        lowercase: true
     },
     
 },{
