@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema({
-
+    
     firstName: {
         type: String,
         required: [true, ''],
@@ -60,11 +60,11 @@ const schema = mongoose.Schema({
         paymentMethodId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'PaymentMethod',
-            required: true
+            //required: true
         },
         customerId: {
             type: String,
-            required: true,
+            //required: true,
         },
     }],
 
