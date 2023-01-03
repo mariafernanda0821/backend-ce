@@ -5,7 +5,15 @@ const Business = require('../models/Business')
 
 const signut = async (req, res)=> {
     try {
-        const arrayRole = [roleId];
+        const body = req?.body;
+        if(!body){
+            return res.status(412).json({
+                ok: false,
+                message: "Es necesario firstName, lastName, email"
+                
+            });
+        }
+        const arrayRole =  [roleId];
 
         const newObjectUser = {
             firstName,
@@ -34,11 +42,12 @@ const signut = async (req, res)=> {
     } catch (error) {
         console.log(error);
         
-        const {code, message}= {code: 412, message:""}
+        const {code, message}= {code: 400, message:"User has not been successfully created."}
 
         return res.status(code).json({
             ok: false,
-            message
+            message,
+            error
         })
     }
 }
@@ -50,12 +59,13 @@ const login = async (req, res) => {
     } catch (error) {
         console.log(error);
         
-        const {code, message}= {code: 412, message:" Se ha presentado un error"}
+        const {code, message}= {code: 400, message:"Session startup failed"}
 
         return res.status(code).json({
             ok: false,
-            message
-        })   
+            message,
+            error
+        }); 
     }
 }
 
