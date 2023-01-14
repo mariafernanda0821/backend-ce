@@ -64,7 +64,7 @@ const login = async (req, res) => {
         return res.status(code).json({
             ok: false,
             message,
-            error
+            error,
         }); 
     }
 }

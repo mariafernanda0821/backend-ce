@@ -2,8 +2,14 @@ const path = require('path');
 const dotenv = require('dotenv');
 
 const rutaEnv = path.resolve(__dirname, '../.env');
+
 //console.log(rutaEnv);
-dotenv.config({path:rutaEnv});
+
+dotenv.config({
+
+  path: rutaEnv
+
+});
 
 const SERVER = {
   HOST: process.env.HOST,
@@ -11,7 +17,6 @@ const SERVER = {
   SESSION_TOKEN: process.env.SESSION_TOKEN,
   SECRET_KEY: process.env.SECRET_KEY,
   EXPIRES_ID: process.env.EXPIRES_ID, 
-
   TEST: "test",
   EMAIL_SERVICE: process.env.EMAIL_SERVICE ,
   EMAIL_PORT: process.env.EMAIL_PORT ,
