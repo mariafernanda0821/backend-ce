@@ -28,13 +28,13 @@ services:
             - db
         ports:
             - 80:4000
-volumes:
-    data:
-    storage:
-networks:
-    default:
-        external:
-            name: traefik
+# volumes:
+#     data:
+#     storage:
+# networks:
+#     default:
+#         external:
+#             name: traefik
 
 # docker-compose down 
 # docker rmi backend
