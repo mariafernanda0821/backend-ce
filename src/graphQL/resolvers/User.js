@@ -1,8 +1,3 @@
-const {
-    loginOrRegistre,
-
-} = require('../../controllers/app/authUser');
-
 
 const UserResolver = {
     
@@ -11,7 +6,7 @@ const UserResolver = {
     },
     
     Mutation: {
-        createUser: (parent, args, context, info) => loginOrRegistre(parent, args, context, info),
+        createUser: (parent, args, context, info) => {},
     }
 };
 

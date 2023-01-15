@@ -19,8 +19,7 @@ const UserTypeDefs = gql`
     }
     
     type Mutation {
-        createUser(token: String) : Token, 
-
+        createUser(token: String) : Token,
     }
 `;
 

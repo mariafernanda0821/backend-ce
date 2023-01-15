@@ -1,8 +1,9 @@
 const {gql} = require('apollo-server-express');
 const {
-    UserTypeDefs, HelloTypeDefs,
+    UserTypeDefs, HelloTypeDefs,AuthTypeDefs
 } =  require('./typeDefs');
-const {HelloResolver,UserResolver } =  require('./resolvers');
+
+const {HelloResolver,UserResolver, AuthUserResolver } =  require('./resolvers');
 
 const rootTypeDefs = gql`
     type Query {
@@ -13,9 +14,9 @@ const rootTypeDefs = gql`
     }
 `;
 
-const typeDefs = [rootTypeDefs, UserTypeDefs, HelloTypeDefs]
+const typeDefs = [rootTypeDefs, HelloTypeDefs, UserTypeDefs, AuthTypeDefs]
 
-const resolvers = [HelloResolver, UserResolver]
+const resolvers = [HelloResolver, UserResolver, AuthUserResolver]
 
 
 
