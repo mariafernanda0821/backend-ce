@@ -16,7 +16,7 @@ const schema = mongoose.Schema({
         lowercase: true
     },
     
-    phone: {
+    phone: [{
         code: {
             type: String,
             trim: true,
@@ -28,7 +28,7 @@ const schema = mongoose.Schema({
             lowercase: true
         }
 
-    },
+    }],
     
     email: {
         type: String,
@@ -44,7 +44,7 @@ const schema = mongoose.Schema({
         default: true
     },
     
-    profilePhoto: {
+    photo: {
         type: String,
         trim: true,
         default: null
@@ -94,15 +94,10 @@ const schema = mongoose.Schema({
         }
     },
 
-    companyId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Business',
-        required: false
-    }
 }, {
 
     timestamps: true
 
 });
 
-module.exports = mongoose.model('User', schema)
+module.exports = mongoose.model('User', schema);
