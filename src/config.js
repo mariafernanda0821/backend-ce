@@ -27,6 +27,8 @@ const SERVER = {
   DB_COLLECTION: process.env.DB_COLLECTION,
   DB_USER: process.env.DB_USER,
   DB_PASSWORD: process.env.DB_PASSWORD,
+  SERVER_URL_LOCAL: process.env.SERVER_URL_LOCAL,
+  SERVER_URL: process.env.SERVER_URL
 }
 
 

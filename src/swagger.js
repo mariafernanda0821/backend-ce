@@ -3,7 +3,7 @@ const path = require('path');
 const { SERVER } = require("./config");
 
 const swaggerDefinition = {
-    openapi: '1.0.0',
+    openapi: '3.0.3',
     info: {
         version: '1.0.0',
         title: 'Instatow',
@@ -23,7 +23,7 @@ const swaggerDefinition = {
         }
     },
     servers: [{
-            url: SERVER.SERVER_URL,
+            url: SERVER.SERVER_URL_LOCAL,
             description: 'local'
         },
         {
