@@ -28,10 +28,10 @@ services:
 volumes:
     data:
     storage:
-# networks:
-#     default:
-#         external:
-#             name: traefik
+networks:
+    default:
+        external:
+            name: traefik
 
 # docker-compose down 
 # docker rmi backend
