@@ -5,18 +5,20 @@ const { SERVER } = require('../src/config');
 const connectDB = async () => {
     try {
 
-        mongoose.connect(SERVER.DB, {
-            // "auth": {
-            // "authSource": SERVER.DB_COLLECTION
-            // },
-            // "user": SERVER.DB_USER,
-            // "pass": SERVER.DB_PASSWORD,
+        // mongoose.connect(SERVER.DB, {
+        //     // "auth": {
+        //     // "authSource": SERVER.DB_COLLECTION
+        //     // },
+        //     // "user": SERVER.DB_USER,
+        //     // "pass": SERVER.DB_PASSWORD,
 
-            //useNewUrlParser: true,
-            //useUnifiedTopology: true,
-            //useFindAndModify: false,
-            //useCreateIndex: true,
-        });
+        //     //useNewUrlParser: true,
+        //     //useUnifiedTopology: true,
+        //     //useFindAndModify: false,
+        //     //useCreateIndex: true,
+        // });
+
+        mongoose.connect(SERVER.DB);
 
         console.log("BD connection active");
         //return;
