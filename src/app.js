@@ -92,10 +92,10 @@ const start = async () => {
             createParentPath: true
         }));
 
-        // add other middleware
-        // app.use(cors());
-        // app.use(bodyParser.json());
-        // app.use(bodyParser.urlencoded({ extended: true }));
+        //add other middleware
+        app.use(cors());
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: true }));
 
         if (SERVER.TEST != 'test') {
             app.use(morgan('dev'));
@@ -105,12 +105,12 @@ const start = async () => {
         connectDB();
 
         // Express.json
-        // app.use(express.json({ extended: true }));
+        app.use(express.json({ extended: true }));
 
         // Documentation
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-        //app.use(require('./routes/index'));
+        app.use(require('./routes/index'));
 
         // Front in react
         app.get('*', (req, res) => {
