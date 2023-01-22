@@ -1,4 +1,4 @@
-version: "v-1.0.1"
+version: '3.1'
 services:
     db:
         image: mongo
@@ -10,7 +10,7 @@ services:
             - 9017:27017
         environment:
             - MONGO_INITDB_ROOT_USERNAME=admin
-            - MONGO_INITDB_ROOT_PASSWORD=2o%K)&z\TQ0dmD.2.a`A.MB^?MneXxsf
+            - MONGO_INITDB_ROOT_PASSWORD=21Lhm2btHNgFLmp9dK83
     backend:
         image: backend
         build: .
