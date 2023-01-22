@@ -18,7 +18,7 @@ const connectDB = async () => {
         //     //useCreateIndex: true,
         // });
 
-        mongoose.connect(SERVER.DB);
+        await mongoose.connect(SERVER.DB);
 
         console.log("BD connection active");
         //return;
