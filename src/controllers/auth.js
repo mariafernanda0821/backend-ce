@@ -1,3 +1,5 @@
+
+
 //models
 const User = require('../models/User');
 const Business = require('../models/Business')
@@ -5,15 +7,7 @@ const Business = require('../models/Business')
 
 const signut = async (req, res)=> {
     try {
-        const body = req?.body;
-        if(!body){
-            return res.status(412).json({
-                ok: false,
-                message: "Es necesario firstName, lastName, email"
-                
-            });
-        }
-        const arrayRole =  [roleId];
+        
 
         const newObjectUser = {
             firstName,

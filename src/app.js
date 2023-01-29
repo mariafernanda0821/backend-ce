@@ -38,16 +38,21 @@ const httpServer = require('http').createServer(app);
 const start = async () => {
     try {
 
+        const isAuthenticated = (resolver, root, args, context, info) => {
+            
+            if (!context.authorization) {
+                throw new Error('Not authenticated');
+            }
+            
+            return resolver(root, args, context, info);
+        };
+
         const apolloServer = new ApolloServer({
             typeDefs,
             resolvers,
             plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-            context: async ({ req, res }) => {
-                return({ 
-                    req,
-                    res,
-                })
-            },
+            context: ({ req, res }) => ({ req, res, authorization: req.headers.authorization }),
+            middlewares: [isAuthenticated]
         });
 
         await apolloServer.start();
@@ -56,7 +61,6 @@ const start = async () => {
             app,
         });
 
-        //app.use('/graphql', require('./routes/index'));
 
         app.use(
             '/graphql',
@@ -145,7 +149,7 @@ const start = async () => {
 module.exports = {
     start,
     httpServer: require('http').createServer(app),
-    
+
 
 }//httpServer;
 

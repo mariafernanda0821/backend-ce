@@ -4,31 +4,36 @@ const schema = mongoose.Schema({
     
     firstName: {
         type: String,
-        required: [true, ''],
+        required: [false, ''],
         trim: true,
         lowercase: true
     },
     
     lastName: {
         type: String,
-        required: [true, ''],
+        required: [false, ''],
         trim: true,
         lowercase: true
     },
     
-    phone: [{
-        code: {
-            type: String,
-            trim: true,
-            lowercase: true
-        },
-        number: {
-            type: String,
-            trim: true,
-            lowercase: true
-        }
-
-    }],
+    phone: {
+        type: String,
+        required: [true, ''],
+        trim: true,
+        lowercase: true
+    },
+    // phone: [{
+    //     code: {
+    //         type: String,
+    //         trim: true,
+    //         lowercase: true
+    //     },
+    //     number: {
+    //         type: String,
+    //         trim: true,
+    //         lowercase: true
+    //     }
+    // }],
     
     email: {
         type: String,
@@ -68,25 +73,25 @@ const schema = mongoose.Schema({
         },
     }],
 
-    socialNetworkId: {
-        googleId: {
-            type: String,
-            required: false
-        },
-        facebookId: {
-            type: String,
-            required: false
-        },
-        appleId: {
-            type: String,
-            required: false
-        },
-    },
+    // socialNetworkId: {
+    //     googleId: {
+    //         type: String,
+    //         required: false
+    //     },
+    //     facebookId: {
+    //         type: String,
+    //         required: false
+    //     },
+    //     appleId: {
+    //         type: String,
+    //         required: false
+    //     },
+    // },
 
     delete: {
         deleted: {
             type: Boolean,
-            default: true
+            default: false
         },
         reason: {
             type: String,

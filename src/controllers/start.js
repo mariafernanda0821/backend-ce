@@ -21,6 +21,7 @@ const loadDataBase = async (req, res) => {
                     if (searchRole) {
                         await Role.findByIdAndUpdate(searchRole._id, {
                             name: key.name,
+                            pronoun: key.pronoun,
                             description: key.description
                         });
 
@@ -29,6 +30,7 @@ const loadDataBase = async (req, res) => {
 
                     await new Role({
                         name: key.name,
+                        pronoun: key.pronoun,
                         description: key.description
                     }).save();
 

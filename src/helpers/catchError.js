@@ -4,8 +4,9 @@
 
 const CODIGO = {
     NOT_AUTHORIZED:{
-      code:  'NOT_AUTHORIZED',
-      message: 'invalid token'  
+        code: 401,
+        codeMessage:  'NOT_AUTHORIZED',
+        message: 'invalid token'  
     },
 
 
