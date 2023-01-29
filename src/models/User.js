@@ -73,6 +73,16 @@ const schema = mongoose.Schema({
         },
     }],
 
+    magicLink:{
+        issuer:{
+            type: String,
+            trim: true,
+        },
+        publicAddress:{
+            type: String,
+            trim: true,
+        }
+    },
     // socialNetworkId: {
     //     googleId: {
     //         type: String,

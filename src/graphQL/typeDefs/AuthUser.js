@@ -6,10 +6,12 @@ const AuthTypeDefs = gql`
     # extend type Query {
     #     _: String   
     # }
-    type Token {
-        token: String
-    }
     
+    type Token {
+        token: String,
+        message: String,
+    }
+   
     type Mutation {
         loginOrRegistreUserApp(token: String) : Token,
     }

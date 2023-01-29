@@ -8,7 +8,7 @@ const { GraphQLError } = require('graphql');
 
 const { generarJWT } = require('../../helpers/generar-jwt');
 
-const { catchError } = require('../../helpers/catchError');
+const { catchError, CODIGO } = require('../../helpers/catchError');
 
 //modles
 const User = require('../../models/User');
@@ -29,12 +29,18 @@ const loginOrRegistreUserApp = async (parent, args, context, info) => {
     try {
 
         const tokenMagicSdk = context.authorization;
+        
+        if(!tokenMagicSdk){
+
+            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"],extensions);
+        
+        }
 
         const userPublicAddress = mAdmin.token.getPublicAddress(tokenMagicSdk);
 
         const metadata = await mAdmin.users.getMetadataByPublicAddress(userPublicAddress);
 
-        const {issuer, publicAddress, email, phoneNumber } = metadata;
+        const { issuer, publicAddress, email, phoneNumber } = metadata;
 
         const searchUser = User.findOne({email:email });
 
@@ -55,7 +61,11 @@ const loginOrRegistreUserApp = async (parent, args, context, info) => {
             email: email,
             phone: phoneNumber,
             role: [searchRole],
-        }).save()
+            magicLink:{
+                issuer,
+                publicAddress
+            }
+        }).save();
         
         const { token } = await generarJWT({ id: registerUser._id});
 
@@ -71,7 +81,7 @@ const loginOrRegistreUserApp = async (parent, args, context, info) => {
 
         const { message, extensions } = await catchError(error);
 
-        throw new GraphQLError(message, {
+        throw new GraphQLError(message,{
             extensions
         });
 

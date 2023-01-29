@@ -1,54 +1,58 @@
 
 
-
-
 const CODIGO = {
-    NOT_AUTHORIZED:{
-        code: 401,
-        codeMessage:  'NOT_AUTHORIZED',
-        message: 'invalid token'  
+    NOT_AUTHORIZED: {
+        message: 'invalid token',
+        extensions: {
+            code: 'NOT_AUTHORIZED',
+            myCustomExtensions: {
+                status: 401,
+                message: 'invalid token'
+            }
+        }
+    },
+    ERROR: {
+        message: 'An unexpected error occurred',
+        extensions: {
+            code: 'ERROR',
+            myCustomExtensions: {
+                status: 400,
+                message: 'An unexpected error occurred'
+            }
+        }
     },
 
+    BASE_DATO: {
+        message: 'Data required to make the request',
+        extensions:{
+            code: 'DATA_REQUIRED_DB',
+            myCustomExtensions: {
+                status: 412,
+                message: 'Data required to make the request',
+                required: []
+            }
+        }
+    }
 
 }
+
 const catchError = (error) => {
     try {
         
-        
-        
-        const message= error.message || "motivo del error ";
-        
-        const extensions={
-            code: 'NOT_AUTHORIZED' ,
-            myCustomExtensions:{
-                message:"motivo del error myCustomExtensions"
-            }
-        }
+        return(CODIGO["NOT_AUTHORIZED"]);
+    
 
-        return ({
-            message,
-            extensions
-        });
 
     } catch (error) {
-        const message="motivo del error ";
-        
-        const extensions={
-            code: "codigo en mayuscula",
-            myCustomExtensions:{
 
-            }
-        }
         
-        return ({
-            message,
-            extensions
-        });
-        
+        return (CODIGO["NOT_AUTHORIZED"]);
+
     }
 }
 
 
 module.exports = {
-    catchError 
+    catchError,
+    CODIGO,
 }
