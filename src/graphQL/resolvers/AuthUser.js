@@ -4,21 +4,22 @@ const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 
 
 const {
-    loginOrRegistreUserApp,
+    MagicLinkLogin,
 
 } = require('../../controllers/app/authUser');
 
 
 const AuthUserResolver = {
     
-    // Query: {
-    //     _: 'String'
-    // },
+    Query: {
+        MagicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info),
     
-    Mutation: {
-        loginOrRegistreUserApp: (parent, args, context, info) => loginOrRegistreUserApp(parent, args, context, info),
+    },
     
-    }
+    // Mutation: {
+    //     MagicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info),
+    
+    // }
 };
 
 

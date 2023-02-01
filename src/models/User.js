@@ -4,42 +4,38 @@ const schema = mongoose.Schema({
     
     firstName: {
         type: String,
-        required: [false, ''],
+        required: [false, 'Name is required'],
         trim: true,
         lowercase: true
     },
     
     lastName: {
         type: String,
-        required: [false, ''],
+        required: [false, 'Last Name is required'],
         trim: true,
         lowercase: true
     },
     
     phone: {
-        type: String,
-        required: [true, ''],
-        trim: true,
-        lowercase: true
+        code:{
+            type: String,
+            required: [true, 'Se required code phone.'],
+            trim: true,
+            lowercase: true
+        },
+        number:{
+            type: String,
+            required: [true, 'Phone is required.'],
+            trim: true,
+            lowercase: true
+        }
     },
-    // phone: [{
-    //     code: {
-    //         type: String,
-    //         trim: true,
-    //         lowercase: true
-    //     },
-    //     number: {
-    //         type: String,
-    //         trim: true,
-    //         lowercase: true
-    //     }
-    // }],
     
     email: {
         type: String,
-        required: [true, ''],
+        required: [true, 'Email is required'],
         trim: true,
-        unique: [true, ''],
+        unique: [true, 'Email must be unique'],
         lowercase: true
     },
     
@@ -52,24 +48,22 @@ const schema = mongoose.Schema({
     photo: {
         type: String,
         trim: true,
-        default: null
+        //default: null
     },
     
     roleId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
-        required: [true, '']
+        required: [true, 'User role required.']
     }],
 
     paymentMethods: [{
         paymentMethodId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'PaymentMethod',
-            //required: true
         },
         customerId: {
             type: String,
-            //required: true,
         },
     }],
 
@@ -83,20 +77,6 @@ const schema = mongoose.Schema({
             trim: true,
         }
     },
-    // socialNetworkId: {
-    //     googleId: {
-    //         type: String,
-    //         required: false
-    //     },
-    //     facebookId: {
-    //         type: String,
-    //         required: false
-    //     },
-    //     appleId: {
-    //         type: String,
-    //         required: false
-    //     },
-    // },
 
     delete: {
         deleted: {

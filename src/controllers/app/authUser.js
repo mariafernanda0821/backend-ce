@@ -2,7 +2,6 @@ const { SERVER } = require('../../config');
 
 const { Magic } = require('@magic-sdk/admin');
 
-const mAdmin = new Magic(SERVER.MAGIC_SDK_SECRET_API_KEY);
 
 const { GraphQLError } = require('graphql');
 
@@ -15,6 +14,8 @@ const User = require('../../models/User');
 const Role = require('../../models/Role');
 
 
+const mAdmin = new Magic(SERVER.MAGIC_SDK_SECRET_API_KEY);
+
 /* 
 issuer (String): The Decentralized ID of the user. We recommend this value to be used as the user ID in your own tables.
 publicAddress(String): The authenticated user's public address (a.k.a.: public key). Currently, this value is associated with the Ethereum blockchain.
@@ -25,19 +26,32 @@ phoneNumber (String | null): Phone number of the authenticated user.
 */
 
 
-const loginOrRegistreUserApp = async (parent, args, context, info) => {
+const MagicLinkLogin = async (parent, args, context, info) => {
     try {
-
+        
         const tokenMagicSdk = context.authorization;
+        
+        //console.log(tokenMagicSdk);
         
         if(!tokenMagicSdk){
 
             throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"],extensions);
         
         }
+        //const issuer01 = mAdmin.token.getIssuer(tokenMagicSdk);
+
+        //console.log("issuer01 issuer01", issuer01);
+        
+        //const DIDToken = context.authorization.substring(7);
+
+        //const publicAddress01 = mAdmin.token.getPublicAddress(DIDToken);
+
+        //console.log("issuer01 issuer01", publicAddress01);
 
         const userPublicAddress = mAdmin.token.getPublicAddress(tokenMagicSdk);
 
+        console.log("userPublicAddress", userPublicAddress);
+        
         const metadata = await mAdmin.users.getMetadataByPublicAddress(userPublicAddress);
 
         const { issuer, publicAddress, email, phoneNumber } = metadata;
@@ -46,7 +60,7 @@ const loginOrRegistreUserApp = async (parent, args, context, info) => {
 
         if(searchUser){
 
-            const { token } = await generarJWT({ id: searchUser._id});
+            const { token } = await generarJWT({ id: searchUser._id.toString()});
 
             return{
                 ok: true,
@@ -57,9 +71,12 @@ const loginOrRegistreUserApp = async (parent, args, context, info) => {
 
         const searchRole = Role.findOne({pronoun:"appUser"});
 
-        const registerUser = await User({
+        const registerUser = await new User({
             email: email,
-            phone: phoneNumber,
+            phone:{
+                code: "+57",
+                number: phoneNumber
+            },
             role: [searchRole],
             magicLink:{
                 issuer,
@@ -90,5 +107,5 @@ const loginOrRegistreUserApp = async (parent, args, context, info) => {
 
 
 module.exports = {
-    loginOrRegistreUserApp,
+    MagicLinkLogin,
 }

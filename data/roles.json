@@ -11,18 +11,24 @@
     },
     {
         "name": "Tow truck agency admin",
-        "pronoun":"TowTruckAgencyAdmin",
+        "pronoun":"towTruckAgencyAdmin",
         "description": "Can register as a company which will generate a company signup link with a company where drivers can register."
     },
     {
         "name": "Tow truck driver",
-        "pronoun":"TowTruckDriver",
+        "pronoun":"towTruckDriver",
         "description": "Can register to a specific company using as lug link that contains the company ID"
     }, 
     
     {
         "name": "Insurance company",
-        "pronoun":"InsuranceCompany",
+        "pronoun":"insuranceCompany",
+        "description": "Can generate codes that the app users can in turn use to pay for their trips. The insurance company will later be billed according to the used codes"
+    },
+    
+    {
+        "name": "Tow Truck Company",
+        "pronoun":"towTruckcompany",
         "description": "Can generate codes that the app users can in turn use to pay for their trips. The insurance company will later be billed according to the used codes"
     }
 ]

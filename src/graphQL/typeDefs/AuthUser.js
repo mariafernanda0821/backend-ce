@@ -3,18 +3,15 @@ const { gql } = require('apollo-server-express');
 
 const AuthTypeDefs = gql`
  
-    # extend type Query {
-    #     _: String   
-    # }
+    extend type Query {
+        MagicLinkLogin: Token,
+    }
     
     type Token {
         token: String,
         message: String,
     }
    
-    type Mutation {
-        loginOrRegistreUserApp(token: String) : Token,
-    }
 `;
 
 module.exports = AuthTypeDefs;

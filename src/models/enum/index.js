@@ -1,6 +1,7 @@
 
+
 const COMPANY_TYPE = {
-    values: ['insurance company', 'tow truck agency'],
+    values: ['insurance company', 'tow truck company'],
     message: '{VALUE} is not a valid company type'
 };
 
