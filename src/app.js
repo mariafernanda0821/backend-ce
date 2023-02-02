@@ -40,6 +40,10 @@ const start = async () => {
 
         const isAuthenticated = (resolver, root, args, context, info) => {
             
+            if (info.fieldName === 'registerUserApp') {
+                return resolver(root, args, context, info);
+            }
+
             if (!context.authorization) {
                 throw new Error('Not authenticated');
             }

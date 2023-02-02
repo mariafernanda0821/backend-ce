@@ -38,14 +38,56 @@ const CODIGO = {
 
 const catchError = (error) => {
     try {
+        //let message="";
+        let required= []
+
+        if(error.errors){
+            for (const errs in error.errors) {
+                        
+                required = required.concat(`${error.errors[errs].message}`) ; 
         
-        return(CODIGO["NOT_AUTHORIZED"]);
-    
+            }
+            return( {
+                message: 'Data required to make the request',
+                extensions:{
+                    code: 'DATA_REQUIRED_DB',
+                    myCustomExtensions: {
+                        status: 412,
+                        message: 'Data required to make the request',
+                        required: required,
+                    }
+                }
+            });
+        }
+
+        if (typeof(error.message === 'string')){
+            return({
+                message: error?.message ||'An unexpected error occurred',
+                extensions: {
+                    code: 'ERROR',
+                    myCustomExtensions: {
+                        status: 400,
+                        message: error?.message ||  'An unexpected error occurred'
+                    }
+                }
+            });
+        }
+
+        return({
+            message: 'An unexpected error occurred',
+            extensions: {
+                code: 'ERROR',
+                myCustomExtensions: {
+                    status: 400,
+                    message: 'An unexpected error occurred'
+                }
+            }
+        });
 
 
     } catch (error) {
 
-        
+        console.log("error error error", error)
         return (CODIGO["NOT_AUTHORIZED"]);
 
     }
