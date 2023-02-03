@@ -11,10 +11,10 @@ const {
 
 const AuthUserResolver = {
     
-    Query: {
-       // MagicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info),
+    // Query: {
+    //    // MagicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info),
     
-    },
+    // },
     
     Mutation: {
         MagicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info), 

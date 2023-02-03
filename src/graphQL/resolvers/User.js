@@ -2,12 +2,21 @@
 const UserResolver = {
     
     Query: {
-        Hello: () => 'hello wordl Maria Fernanda'
+        User: () => {
+            return({
+                "firstName":"maria",
+                "lastName":"maria", 
+                "email":"maria",
+                "code":"maria",
+                "phone":"maria"
+            })
+        },
+       // Hello: () => 'hello wordl Maria Fernanda'
     },
     
-    Mutation: {
-        createUser: (parent, args, context, info) => {},
-    }
+    // Mutation: {
+        
+    // }
 };
 
 

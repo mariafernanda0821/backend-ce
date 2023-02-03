@@ -40,10 +40,29 @@ const generarJWT = async({id, uid}) => {
     })
 }
 
+const searchValuejwt = async(token) => {
+    
+    //const token = token;
+    
+    return new Promise((resolve, reject) => {
+        try {
+            const userId = jwt.verify(token, SERVER.SECRETOR_PRIVATE_KEY); 
 
+            resolve(userId);
+
+        } catch (error) {
+            
+            console.log(error);
+            
+            reject(error);   
+        }
+
+    })
+}
 
 
 module.exports = {
-    generarJWT
+    generarJWT,
+    searchValuejwt
 }
 
