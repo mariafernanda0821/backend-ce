@@ -15,7 +15,7 @@ const searchUserApp = async (parent, args, context, info) => {
 
         if (!token) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"], extensions);
+            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
 
         }
 
