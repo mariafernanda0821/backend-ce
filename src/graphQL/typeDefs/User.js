@@ -12,19 +12,23 @@ const UserTypeDefs = gql`
         firstName: String,
         lastName: String,
         email: String,
-        # phone: {
-        #     code: String,
-        #     number: String
-        # }
+        phone: Phone,
+        roleId: [Role],
+        createdAt: String
        
+    },
+
+    type Phone {
+        code: String,
+        number: String
     }
     
-    # type Role {
-    #     _id:  ID!
-    #     name: String,
-    #     description: String,
-    #     pronoun: String
-    # }
+    type Role {
+        _id:  ID!
+        name: String,
+        description: String,
+        pronoun: String
+    }
     # type Mutation {
     #     createUser(token: String) : Token,
     # }

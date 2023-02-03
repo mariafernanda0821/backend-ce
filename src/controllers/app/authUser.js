@@ -13,6 +13,7 @@ const { catchError, CODIGO } = require('../../helpers/catchError');
 //modles
 const User = require('../../models/User');
 const Role = require('../../models/Role');
+const UserApp = require('../../models/UserApp')
 
 
 const mAdmin = new Magic(SERVER.MAGIC_SECRET_KEY);
@@ -27,8 +28,9 @@ phoneNumber (String | null): Phone number of the authenticated user.
 */
 
 const SignutUserApp = async (parent, args, context, info) => {
+    let saveUser;
     try {
-
+     
         const {
             firstName,
             lastName,
@@ -38,21 +40,23 @@ const SignutUserApp = async (parent, args, context, info) => {
         } = args;
 
         const roleId = await Role.findOne({ pronoun: "appUser" });
-
-        console.log(roleId);
-
+        
         const newObjectUser = {
             firstName,
             lastName,
             email,
-            role: [roleId._id],
+            roleId: [roleId._id],
             phone: {
                 code: code,
                 number: phone
             }
         };
 
-        await new User(newObjectUser).save();
+        const saveUser = await new User(newObjectUser).save();
+
+        await new UserApp({
+            userId: saveUser._id
+        }).save(); 
 
         return ({
             ok: true,
@@ -60,7 +64,14 @@ const SignutUserApp = async (parent, args, context, info) => {
         });
 
     } catch (error) {
+        
         console.log(error);
+
+        if (saveUser && saveUser._id) {
+
+            await User.deleteOne({ _id: saveUser._id });
+
+        }
 
         const { message, extensions } = await catchError(error);
 
@@ -79,7 +90,7 @@ const MagicLinkLogin = async (parent, args, context, info) => {
 
         if (!tokenMagicSdk) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"], extensions);
+            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
 
         }
     
@@ -87,28 +98,26 @@ const MagicLinkLogin = async (parent, args, context, info) => {
     
         const metadata = await mAdmin.users.getMetadataByIssuer(searchIssuer);
         
-        console.log("claim ======> metadata ", metadata);
+        //console.log("claim ======> metadata ", metadata);
 
         const { issuer, publicAddress, email} = metadata;
 
-        const searchUser = User.findOne({ email: email });
+        const searchUser = await User.findOne({ email: email });
 
         if (searchUser) {
 
-            const { token } = await generarJWT({ id: searchUser._id.toString() });
+            const { token } = await generarJWT({ id: searchUser._id.toString()});
 
             return {
                 ok: true,
                 token,
                 message: "You have perfectly started the session."
             }
+
         }
 
-        return {
-            ok: true,
-            //token: "token_nue",
-            message: "User not registered"
-        }
+        throw new GraphQLError(CODIGO["USERNOTREGISTER"].message, CODIGO["USERNOTREGISTER"].extensions);
+        
 
     } catch (error) {
 

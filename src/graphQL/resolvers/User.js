@@ -1,16 +1,10 @@
+const {searchUserApp} = require('../../controllers/app/User');
+
 
 const UserResolver = {
     
     Query: {
-        User: () => {
-            return({
-                "firstName":"maria",
-                "lastName":"maria", 
-                "email":"maria",
-                "code":"maria",
-                "phone":"maria"
-            })
-        },
+        User: (parent, args, context, info) => searchUserApp(parent, args, context, info),
        // Hello: () => 'hello wordl Maria Fernanda'
     },
     

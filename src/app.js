@@ -30,6 +30,8 @@ const { typeDefs, resolvers } = require('./graphQL/index.js');
 
 const { SERVER } = require('./config');
 
+const { CODIGO } = require('./helpers/catchError');
+
 const app = express();
 
 const httpServer = require('http').createServer(app);
@@ -45,7 +47,9 @@ const start = async () => {
             }
 
             if (!context.authorization) {
-                throw new Error('Not authenticated');
+                throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+
+                //throw new Error('Not authenticated');
             }
             
             return resolver(root, args, context, info);

@@ -32,7 +32,18 @@ const CODIGO = {
                 required: []
             }
         }
-    }
+    },
+    USERNOTREGISTER: {
+        message: 'the user is not registered',
+        extensions: {
+            code: 'ERROR',
+            myCustomExtensions: {
+                status: 412,
+                message: 'the user is not registered',
+                required: []
+            }
+        }
+    },
 
 }
 

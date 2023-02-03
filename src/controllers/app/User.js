@@ -4,36 +4,61 @@ const { generarJWT, searchValuejwt } = require('../../helpers/generar-jwt');
 
 const { catchError, CODIGO } = require('../../helpers/catchError');
 
+const { GraphQLError } = require('graphql');
 
-const searchUser = async () => {
+const mongoose = require('mongoose');
+
+const searchUserApp = async (parent, args, context, info) => {
     try {
-        const token =  context.authorization;
+        
+        const token = context.authorization;
+
         if (!token) {
 
             throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"], extensions);
 
         }
 
-        const userId = searchValuejwt(token);
+        const userId = await searchValuejwt(token);
 
-        const user = await User.aggregate()
+        console.log("userId userId userId",userId.id);
+        const [user] = await User.aggregate([
+            {
+                '$match': {
+                    '_id': mongoose.Types.ObjectId(userId),
+                    "delete.deleted": false
+                }
+            }, {
+                '$lookup': {
+                    'from': 'roles',
+                    'localField': 'roleId',
+                    'foreignField': '_id',
+                    'as': 'roleId'
+                }
+            }, {
+                '$lookup': {
+                    'from': 'userapps',
+                    'localField': '_id',
+                    'foreignField': 'userId',
+                    'as': 'userApp'
+                }
+            }
+        ]);
 
-        return({
-            "firstName":"maria",
-            "lastName":"maria", 
-            "email":"maria",
-            "code":"maria",
-            "phone":"maria"
-        })
+        return (user)
 
     } catch (error) {
         console.log(error);
-    
+
         const { message, extensions } = await catchError(error);
 
-        throw new GraphQLError(message,{
+        throw new GraphQLError(message, {
             extensions
         });
 
     }
+}
+
+module.exports = {
+    searchUserApp
 }

@@ -13,13 +13,22 @@ const AuthTypeDefs = gql`
     }
 
     type Respuesta{
+        ok: Boolean,
         message: String
     }
     
     type Mutation{
+        
         MagicLinkLogin: Token,
-        registerUserApp(firstname: String, lastName:String, email:String, code:String, phone:String ): Respuesta 
+
+        registerUserApp(firstName: String, lastName:String, email:String, code:String, phone:String ): Respuesta 
     }
 `;
 
-module.exports = AuthTypeDefs;
+// firstName,
+//     lastName,
+//     email,
+//     code,
+//     phone,
+
+    module.exports = AuthTypeDefs;

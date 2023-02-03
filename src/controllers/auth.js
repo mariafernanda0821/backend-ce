@@ -136,18 +136,8 @@ const signutAdmin = async (parent, args, context, info) => {
     }
 }
 
-
-const login = async (req, res) => {
-    try {
-        
-    } catch (error) {
-         
-    }
-}
-
 module.exports = {
     signut,
     signutCompany,
     signutAdmin,
-    login
 }

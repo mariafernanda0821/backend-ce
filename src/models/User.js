@@ -1,17 +1,18 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const schema = mongoose.Schema({
     
     firstName: {
         type: String,
-        required: [false, 'Name is required'],
+        required: [true, 'Name is required'],
         trim: true,
         lowercase: true
     },
     
     lastName: {
         type: String,
-        required: [false, 'Last Name is required'],
+        required: [true, 'Last Name is required'],
         trim: true,
         lowercase: true
     },
@@ -35,8 +36,10 @@ const schema = mongoose.Schema({
         type: String,
         required: [true, 'Email is required'],
         trim: true,
-        unique: [true, 'Email must be unique'],
-        lowercase: true
+        unique: true,
+        lowercase: true,
+       // validate: [true, 'Please fill a valid email address'],
+
     },
     
     active: {
@@ -94,5 +97,9 @@ const schema = mongoose.Schema({
     timestamps: true
 
 });
+
+// Apply uniqueValidator plugin to userSchema
+//This email address is already registered
+schema.plugin(uniqueValidator, { message: 'This {PATH} address is already registered'});
 
 module.exports = mongoose.model('User', schema);
