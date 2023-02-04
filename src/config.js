@@ -16,6 +16,8 @@ const SERVER = {
 
   PORT: process.env.PORT,
   
+  PORTHTPPS: process.env.PORTHTPPS,
+
   MAGIC_SECRET_KEY: process.env.MAGIC_SECRET_KEY,
 
   MAGIC_SDK_PUBLISHABLE_API_KEY: process.env.MAGIC_SDK_PUBLISHABLE_API_KEY,

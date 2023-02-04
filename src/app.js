@@ -32,10 +32,20 @@ const { SERVER } = require('./config');
 
 const { CODIGO } = require('./helpers/catchError');
 
-const app = express();
+const fs = require('fs');
 
+var https = require('https');
+
+const app = express();
+console.log(path.resolve('./src/cert/key.pem'))
+
+const options = {
+    key:  fs.readFileSync(path.resolve('./src/cert/key.pem'), 'utf8'),
+    cert: fs.readFileSync(path.resolve('./src/cert/cert.pem'), 'utf8'),
+}
 const httpServer = require('http').createServer(app);
 
+const httpsServer = https.createServer(options, app);
 
 const start = async () => {
     try {
@@ -157,6 +167,7 @@ const start = async () => {
 module.exports = {
     start,
     httpServer: require('http').createServer(app),
+    httpsServer: https.createServer(options, app),
 
 
 }//httpServer;
