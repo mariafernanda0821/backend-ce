@@ -46,11 +46,12 @@ const fs = require('fs');
 const https = require('https');
 
 const app = express();
-console.log(path.resolve('./src/cert/key.pem'))
+//console.log(path.resolve('./src/cert/key.pem'))
 
 const options = {
-    key:  fs.readFileSync(path.resolve('./src/cert/key.pem'), 'utf8'),
-    cert: fs.readFileSync(path.resolve('./src/cert/cert.pem'), 'utf8'),
+    key:  fs.readFileSync(path.resolve('./src/cert/key1.pem')),
+    cert: fs.readFileSync(path.resolve('./src/cert/cert1.pem')),
+    //passphrase: ['instatow']
 }
 const httpServer = require('http').createServer(app);
 
@@ -75,12 +76,13 @@ const start = async () => {
         };
 
         let plugins = [];
+        
         if (SERVER.NODE_ENV === 'production') {
             plugins = [ApolloServerPluginLandingPageProductionDefault({ embed: true, graphRef: SERVER.APOLLO_GRAPH_REF,key: SERVER.APOLLO_KEY })]
         } else {
             plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
         }
-        
+        console.log(plugins)
         const apolloServer = new ApolloServer({
             typeDefs,
             resolvers,
@@ -100,10 +102,10 @@ const start = async () => {
 
         app.use(
             '/graphql',
-            cors({ origin: [`http://localhost:${SERVER.PORT}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
+            cors({ origin: [`http://localhost:${SERVER.PORT}`,`http://localhost:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
             //cors(),
             bodyParser.json(),
-            expressMiddleware(apolloServer)
+            //expressMiddleware(apolloServer)
             // expressMiddleware(apolloServer,{
             //     context:async ({ req, res, next }) => {
             //         console.log("{ req, res, next }", { req, res, next })
