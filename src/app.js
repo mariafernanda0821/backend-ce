@@ -67,6 +67,7 @@ const start = async () => {
             }
 
             if (!context.authorization) {
+               console.log("entre aqui en la configuracion");_
                 throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
 
                 //throw new Error('Not authenticated');
@@ -80,9 +81,9 @@ const start = async () => {
         if (SERVER.NODE_ENV === 'production') {
             plugins = [ApolloServerPluginLandingPageProductionDefault({ embed: true, graphRef: SERVER.APOLLO_GRAPH_REF,key: SERVER.APOLLO_KEY })]
         } else {
-            plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
+            plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true, httpServer })]
         }
-        console.log(plugins)
+        //console.log(plugins)
         const apolloServer = new ApolloServer({
             typeDefs,
             resolvers,
@@ -102,10 +103,10 @@ const start = async () => {
 
         app.use(
             '/graphql',
-            cors({ origin: [`http://localhost:${SERVER.PORT}`,`http://localhost:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
+            cors({ origin: [`http://localhost:${SERVER.PORT}`, `http://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
             //cors(),
             bodyParser.json(),
-            //expressMiddleware(apolloServer)
+            expressMiddleware(apolloServer)
             // expressMiddleware(apolloServer,{
             //     context:async ({ req, res, next }) => {
             //         console.log("{ req, res, next }", { req, res, next })
@@ -186,8 +187,8 @@ const start = async () => {
 
 module.exports = {
     start,
+    //httpsServer: require('https').createServer(options, app),
     httpServer: require('http').createServer(app),
-    httpsServer: https.createServer(options, app),
 
 
 }//httpServer;

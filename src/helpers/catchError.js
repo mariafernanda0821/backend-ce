@@ -7,7 +7,7 @@ const CODIGO = {
             code: 'NOT_AUTHORIZED',
             myCustomExtensions: {
                 status: 401,
-                message: 'invalid token'
+                message: 'user not authorized, token invalid'
             }
         }
     },

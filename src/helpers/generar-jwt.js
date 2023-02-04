@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const { SERVER } = require('../config');
-
+const User = require('../models/User');
 
 const MESSAGE = 'ocurrio un error en crear el token'
 
@@ -15,7 +15,6 @@ const generarJWT = async (data) => {
 
             const payload = {
                 id: id,//id unico de usuario,
-                //uid: uid ,//"id unicio del usuario"
             }
 
             const token = jwt.sign(
@@ -43,19 +42,32 @@ const generarJWT = async (data) => {
     })
 }
 
-const searchValuejwt = async (token) => {
-    return new Promise((resolve, reject) => {
+const searchValuejwtUser = async (token) => {
+
+   return new Promise(async (resolve, reject) => {
         try {
 
             const userId = jwt.verify(token, SERVER.SECRETOR_PRIVATE_KEY);
             
-            resolve(userId);
+            const searchUser = await User.findById(userId.id);
+                        
+            if(!searchUser){
+
+                reject({message: "unauthorized user does not exist"})
+            
+            }
+
+            //return {id: _id}
+
+            resolve({id: searchUser._id.toString()});
+
+            //return(userId);
 
         } catch (error) {
 
-            console.log(error);
-
-            reject(error);
+            console.log("=============>", error);
+            reject(error)
+            //throw(error);
         }
 
     });
@@ -65,6 +77,6 @@ const searchValuejwt = async (token) => {
 
 module.exports = {
     generarJWT,
-    searchValuejwt
+    searchValuejwtUser
 }
 

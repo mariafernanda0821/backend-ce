@@ -17,7 +17,7 @@ const AuthUserResolver = {
     // },
     
     Mutation: {
-        MagicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info), 
+        magicLinkLogin: (parent, args, context, info) => MagicLinkLogin(parent, args, context, info), 
         registerUserApp: (parent, args, context, info) => SignutUserApp(parent, args, context, info),
     }
 };

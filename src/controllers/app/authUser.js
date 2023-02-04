@@ -58,6 +58,10 @@ const SignutUserApp = async (parent, args, context, info) => {
             userId: saveUser._id
         }).save(); 
 
+        const { token } = await generarJWT({ id: saveUser._id.toString()});
+        
+        console.log(token);
+
         return ({
             ok: true,
             message: "The user has been created perfectly."
@@ -98,7 +102,7 @@ const MagicLinkLogin = async (parent, args, context, info) => {
     
         const metadata = await mAdmin.users.getMetadataByIssuer(searchIssuer);
         
-        //console.log("claim ======> metadata ", metadata);
+        console.log("claim ======> metadata ", metadata);
 
         const { issuer, publicAddress, email} = metadata;
 
@@ -107,18 +111,30 @@ const MagicLinkLogin = async (parent, args, context, info) => {
         if (searchUser) {
 
             const { token } = await generarJWT({ id: searchUser._id.toString()});
+            const magicLink ={
+                issuer: issuer,
+                publicAddress:publicAddress
+            };
+            
+            await User.findOneAndUpdate({email: email}, {magicLink: magicLink});
 
             return {
                 ok: true,
                 token,
+                register: true,
                 message: "You have perfectly started the session."
             }
 
         }
 
-        throw new GraphQLError(CODIGO["USERNOTREGISTER"].message, CODIGO["USERNOTREGISTER"].extensions);
-        
+        return {
+            ok: true,
+            token: null,
+            register: false,
+            message: "user not registered."
+        }
 
+     
     } catch (error) {
 
         console.log(error);

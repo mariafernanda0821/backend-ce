@@ -14,13 +14,28 @@ const UserTypeDefs = gql`
         email: String,
         phone: Phone,
         roleId: [Role],
-        createdAt: String
-       
+        createdAt: String,
+        magicLink: MagicLink,
+        vehicle: [Vehicle],   
     },
 
     type Phone {
         code: String,
         number: String
+    }
+
+    type MagicLink {
+        issuer: String,
+        publicAddress: String
+    }
+
+    type Vehicle {
+        _id: ID!,
+        make: String,
+        model: String,
+        year: String,
+        colour: String,
+        licencePlate: String
     }
     
     type Role {
@@ -29,67 +44,42 @@ const UserTypeDefs = gql`
         description: String,
         pronoun: String
     }
-    # type Mutation {
-    #     createUser(token: String) : Token,
-    # }
+
+    type Answer{
+        ok: Boolean,
+        status: Int,
+        message: String
+    }
+
+    type Mutation {
+
+        updateUserApp(
+            make: String,
+            model: String,
+            year: String,
+            colour: String,
+            licencePlate: String
+            ) : Answer,
+
+        addVehicleUserApp(
+            make: String,
+            model: String,
+            year: String,
+            colour: String,
+            licencePlate: String
+        ): Answer,
+
+        updateVehicleUserApp(
+            vehicleId: String,
+            make: String,
+            model: String,
+            year: String,
+            colour: String,
+            licencePlate: String,
+        ):Answer
+    }
 `;
 
 
-// const UserTypeDefs = gql`
-//     extend type Query {
-//         user(id:ID!): User,
-//         token: String
-//     }
-
-//     type Phone {
-//         code: String,
-//         number: String
-//     }
-
-//     type Role {
-//         _id: ID!,
-//         name: String, 
-//         description: String,
-//     }
-//     type paymentMethodId {
-//             _id: ID!
-//             name: String
-//             description: String
-//     }
-//     type PaymentMethods {
-//         paymentMethodId: paymentMethodId
-//         customerId: String
-//     }
-
-//     type SocialNetworkId {
-//         googleId: String
-//         facebookId: String
-//         appleId: String
-//     }
-
-//     type User {
-//         _id: ID!
-//         firstName: String,
-//         lastName: String,
-//         phone: [Phone],
-//         email: String,
-//         active: String,
-//         photo: String,
-//         roleId: [Role],
-//         paymentMethods: [PaymentMethods],
-//         socialNetworkId: SocialNetworkId,
-//         createdAt: String
-//         updateAt: String
-//     }
-
-//     type Mutacion {
-
-//         createdUser(token: String) : String
-//     }
-// `;
-
-
-
-//module.exports = UserTypeDefs
 
 module.exports = UserTypeDefs;

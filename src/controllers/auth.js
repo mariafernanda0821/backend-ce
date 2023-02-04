@@ -36,6 +36,7 @@ const signut = async (parent, args, context, info) => {
         await new User(newObjectUser).save();
 
         return({
+            status: 200,
             ok: true,
             message: "Se ha creado el usuario perfectamente."
         });
@@ -76,6 +77,7 @@ const signutCompany = async(parent, args, context, info) => {
         await new Campany(objectCompany).save();
 
         return({
+            status: 200,
             ok: true,
             message: "Se ha creado el usuario perfectamente."
         });
@@ -121,6 +123,7 @@ const signutAdmin = async (parent, args, context, info) => {
 
         return({
             ok: true,
+            status: 200,
             message: "Se ha creado el usuario perfectamente."
         });
 
