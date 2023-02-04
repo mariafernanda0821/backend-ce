@@ -87,8 +87,8 @@ const start = async () => {
 
         app.use(
             '/graphql',
-            //cors({ origin: [`http://localhost:${SERVER.PORT}`, `http://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
-            cors(),
+            cors({ origin: [`http://localhost:${SERVER.PORT}`, `http://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
+            //cors(),
             bodyParser.json(),
             expressMiddleware(apolloServer)
             // expressMiddleware(apolloServer,{
