@@ -6,6 +6,11 @@ const { expressMiddleware } = require('@apollo/server/express4');
 
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer');
 
+const {
+    ApolloServerPluginLandingPageLocalDefault,
+    ApolloServerPluginLandingPageProductionDefault 
+} = require('@apollo/server/plugin/landingPage/default');
+
 //const { startStandaloneServer } = require('@apollo/server/standalone');
 
 const fileUpload = require('express-fileupload');
@@ -68,14 +73,22 @@ const start = async () => {
             
             return resolver(root, args, context, info);
         };
+
+        let plugins = [];
+        if (SERVER.NODE_ENV === 'production') {
+            plugins = [ApolloServerPluginLandingPageProductionDefault({ embed: true, graphRef: 'myGraph@prod' })]
+        } else {
+            plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
+        }
         
         const apolloServer = new ApolloServer({
             typeDefs,
             resolvers,
-            plugins: [ApolloServerPluginDrainHttpServer({ httpServer: httpsServer })],
+            plugins: plugins, //[ApolloServerPluginDrainHttpServer({ httpServer: httpsServer })],
             context: ({ req, res }) => ({ req, res, authorization: req.headers.authorization }),
             middlewares: [isAuthenticated],
             cache: new InMemoryLRUCache(),
+            //cors({ origin: [`http://localhost:${SERVER.PORT}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
         });
 
         await apolloServer.start();
@@ -87,7 +100,7 @@ const start = async () => {
 
         app.use(
             '/graphql',
-            cors({ origin: [`http://localhost:${SERVER.PORT}`, `http://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
+            cors({ origin: [`http://localhost:${SERVER.PORT}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
             //cors(),
             bodyParser.json(),
             expressMiddleware(apolloServer)

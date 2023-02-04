@@ -17,6 +17,8 @@ const SERVER = {
   PORT: process.env.PORT,
   
   PORTHTPPS: process.env.PORTHTPPS,
+  
+  NODE_ENV: process.env.NODE_ENV,
 
   MAGIC_SECRET_KEY: process.env.MAGIC_SECRET_KEY,
 
