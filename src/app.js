@@ -76,7 +76,7 @@ const start = async () => {
 
         let plugins = [];
         if (SERVER.NODE_ENV === 'production') {
-            plugins = [ApolloServerPluginLandingPageProductionDefault({ embed: true, graphRef: 'myGraph@prod' })]
+            plugins = [ApolloServerPluginLandingPageProductionDefault({ embed: true, graphRef: SERVER.APOLLO_GRAPH_REF , })]
         } else {
             plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
         }

@@ -18,6 +18,10 @@ const SERVER = {
   
   PORTHTPPS: process.env.PORTHTPPS,
   
+  APOLLO_GRAPH_REF: process.env.APOLLO_GRAPH_REF,
+  
+  APOLLO_KEY: process.env.APOLLO_KEY,
+
   NODE_ENV: process.env.NODE_ENV,
 
   MAGIC_SECRET_KEY: process.env.MAGIC_SECRET_KEY,
