@@ -24,7 +24,11 @@ const connectDB = require('../db/db.js');
 
 const morgan = require('morgan');
 
+const { InMemoryLRUCache } = require('@apollo/utils.keyvaluecache');
+
 const { json } = require('body-parser');
+
+
 
 const { typeDefs, resolvers } = require('./graphQL/index.js');
 
@@ -34,7 +38,7 @@ const { CODIGO } = require('./helpers/catchError');
 
 const fs = require('fs');
 
-var https = require('https');
+const https = require('https');
 
 const app = express();
 console.log(path.resolve('./src/cert/key.pem'))
@@ -64,13 +68,14 @@ const start = async () => {
             
             return resolver(root, args, context, info);
         };
-
+        
         const apolloServer = new ApolloServer({
             typeDefs,
             resolvers,
-            plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+            plugins: [ApolloServerPluginDrainHttpServer({ httpServer: httpsServer })],
             context: ({ req, res }) => ({ req, res, authorization: req.headers.authorization }),
-            middlewares: [isAuthenticated]
+            middlewares: [isAuthenticated],
+            cache: new InMemoryLRUCache(),
         });
 
         await apolloServer.start();
