@@ -2,10 +2,10 @@
 
 //models
 const User = require('../models/User');
-const Campany = require('../models/Business')
+const Campany = require('../models/Company');
 const Role = require('../models/Role');
 
-const { catchError, CODIGO } = require('../../helpers/catchError');
+const { catchError, CODIGO } = require('../helpers/catchError');
 
 //helper
 
@@ -57,12 +57,12 @@ const signut = async (parent, args, context, info) => {
 const signutCompany = async(parent, args, context, info) => {
     try {
 
-        const {name, address, code, numberPhone } = args;
+        const {name, code, numberPhone,typeCampany, postCode, address01, city, state, ref, address02 } = args;
 
-        const towTruckcompany = "towTruckcompany";
+        const towTruckcompany = "towTruckCompany";
         const insuranceCompany = "insuranceCompany";
 
-        const roleId = await Role.findOne({pronoun: towTruckcompany});
+        const roleId = await Role.findOne({pronoun: typeCampany});
 
         const objectCompany ={
             name: name,
@@ -71,7 +71,13 @@ const signutCompany = async(parent, args, context, info) => {
                 code: code,
                 number: numberPhone
             },
-            address: [address]
+            address: [{
+                postCode, 
+                address01, 
+                city, 
+                state, 
+                ref
+            }]
         }
 
         await new Campany(objectCompany).save();

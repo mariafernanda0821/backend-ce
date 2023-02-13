@@ -18,7 +18,7 @@ const AuthTypeDefs = gql`
         
         magicLinkLogin: Token,
 
-        registerUserApp(firstName: String, lastName:String, email:String, code:String, phone:String ): Answer 
+        registerUserApp(firstName: String!, lastName:String!, email:String!, code:String!, phone:String! ): Answer 
     }
 `;
 

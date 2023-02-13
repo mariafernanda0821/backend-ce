@@ -48,14 +48,15 @@ const https = require('https');
 const app = express();
 //console.log(path.resolve('./src/cert/key.pem'))
 
-const options = {
-    key:  fs.readFileSync(path.resolve('./src/cert/key1.pem')),
-    cert: fs.readFileSync(path.resolve('./src/cert/cert1.pem')),
-    //passphrase: ['instatow']
-}
+// const options = {
+//     key:  fs.readFileSync(path.resolve('./src/cert/key1.pem')),
+//     cert: fs.readFileSync(path.resolve('./src/cert/cert1.pem')),
+//     //passphrase: ['instatow']
+// }
+
 const httpServer = require('http').createServer(app);
 
-const httpsServer = https.createServer(options, app);
+//const httpsServer = https.createServer(options, app);
 
 const start = async () => {
     try {
