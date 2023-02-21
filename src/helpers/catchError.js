@@ -6,6 +6,7 @@ const CODIGO = {
         extensions: {
             code: 'NOT_AUTHORIZED',
             myCustomExtensions: {
+                ok:false,
                 status: 401,
                 message: 'user not authorized, token invalid'
             }
@@ -17,6 +18,7 @@ const CODIGO = {
             code: 'ERROR',
             myCustomExtensions: {
                 status: 400,
+                ok:false,
                 message: 'An unexpected error occurred'
             }
         }
@@ -25,8 +27,9 @@ const CODIGO = {
     BASE_DATO: {
         message: 'Data required to make the request',
         extensions:{
-            code: 'DATA_REQUIRED_DB',
+            code: 'ERROR_DATA',
             myCustomExtensions: {
+                ok: false,
                 status: 412,
                 message: 'Data required to make the request',
                 required: []
@@ -56,7 +59,7 @@ const catchError = (error) => {
             for (const errs in error.errors) {
                         
                 required = required.concat(`${error.errors[errs].message}`) ; 
-        
+                message += `${error.errors[errs].message}, `
             }
             return( {
                 message: 'Data required to make the request',
@@ -64,7 +67,8 @@ const catchError = (error) => {
                     code: 'DATA_REQUIRED_DB',
                     myCustomExtensions: {
                         status: 412,
-                        message: 'Data required to make the request',
+                        ok: false,
+                        message: message ,//'Data required to make the request',
                         required: required,
                     }
                 }
@@ -77,8 +81,9 @@ const catchError = (error) => {
                 extensions: {
                     code: 'ERROR',
                     myCustomExtensions: {
-                        status: 400,
-                        message: error?.message ||  'An unexpected error occurred'
+                        status: 412,
+                        ok: false,
+                        message: error?.message 
                     }
                 }
             });

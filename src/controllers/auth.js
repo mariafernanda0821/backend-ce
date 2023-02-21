@@ -4,10 +4,14 @@
 const User = require('../models/User');
 const Campany = require('../models/Company');
 const Role = require('../models/Role');
+const { generarJWT } = require('../helpers/generar-jwt');
+
 
 const { catchError, CODIGO } = require('../helpers/catchError');
 
 //helper
+
+
 
 const signut = async (parent, args, context, info) => {
     try {
