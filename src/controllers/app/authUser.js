@@ -41,6 +41,13 @@ const SignutUserApp = async (parent, args, context, info) => {
             password,
         } = args;
 
+        const searchUser = await User.findOne({ email: email });
+
+        if (searchUser) {
+
+            throw new Error("ERROR_DATA-The email is already registered.");
+        
+        }
 
         if (password) {
 
@@ -48,7 +55,6 @@ const SignutUserApp = async (parent, args, context, info) => {
 
             hash = bcrypt.hashSync(password, salt);
 
-            console.log("hash hast", hash);
         }
 
         const roleId = await Role.findOne({ pronoun: "appUser" });
@@ -65,8 +71,7 @@ const SignutUserApp = async (parent, args, context, info) => {
         };
 
         if (hash) {
-            console.log("entre al if de hash");
-
+            
             newObjectUser.password = hash;
 
         }
@@ -131,16 +136,8 @@ const LoginUser = async (parent, args, context, info) => {
 
         if (!comparePassword) {
 
-            throw new GraphQLError("Incorrect password", {
-
-                code: 'ERROR_DATA',
-                myCustomExtensions: {
-                    ok: false,
-                    status: 412,
-                    message: 'Incorrect password.'
-                }
-
-            });
+            throw new Error("ERROR_DATA-Incorrect password.");
+         
         }
 
         const { token } = await generarJWT({ id: searchUser._id.toString() });
@@ -174,8 +171,8 @@ const MagicLinkLogin = async (parent, args, context, info) => {
 
         if (!tokenMagicSdk) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
-
+            throw new Error("NOT_AUTHORIZED-User not authorized, token invalid.")
+            
         }
 
         const searchIssuer = mAdmin.token.getIssuer(tokenMagicSdk);
