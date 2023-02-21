@@ -81,6 +81,8 @@ const SignutUserApp = async (parent, args, context, info) => {
 
         return ({
             ok: true,
+            
+            status: 200,
 
             message: "The user has been created perfectly.",
 
