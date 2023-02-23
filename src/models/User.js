@@ -23,7 +23,7 @@ const schema = mongoose.Schema({
     phone: {
         code:{
             type: String,
-            required: [true, 'Se required code phone.'],
+            default: "+00",
             trim: true,
             lowercase: true
         },

@@ -13,6 +13,12 @@ const schema = mongoose.Schema({
 
     },
  
+    userOwnerId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'User Owner required.']
+    },
+    
     roleId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
@@ -50,8 +56,8 @@ const schema = mongoose.Schema({
     phone:[ {
         code:{ 
             type: String,
-            required: [true, 'Se required code phone.'],
             trim: true,
+            default: '+00',
             lowercase: true
         },
         number:{

@@ -61,15 +61,34 @@ const signut = async (parent, args, context, info) => {
 const signutCompany = async(parent, args, context, info) => {
     try {
 
-        const {name, code, numberPhone,typeCampany, postCode, address01, city, state, ref, address02 } = args;
+        const {firstName, lastName, email, numberPhoneUser,
+            
+            nameCampany, code, numberPhone,typeCampany, postCode, address01, city, state, ref, address02
+         } = args;
 
         const towTruckcompany = "towTruckCompany";
         const insuranceCompany = "insuranceCompany";
 
         const roleId = await Role.findOne({pronoun: typeCampany});
+        
+        const roleUser = await Role.findOne({pronoun: "towTruckAgencyAdmin"});
+        
+        const objectUser = {
+            firstName,
+            lastName,
+            email,
+            numberPhoneUser,
+            roleId: [roleUser._id],
+            phone:{
+                number:numberPhoneUser
+            }
+        }
 
+        const createdUser = await new User(objectUser).save();
+        
         const objectCompany ={
-            name: name,
+            name: nameCampany,
+            userOwnerId:createdUser._id,
             roleId: [roleId],
             phone: {
                 code: code,
@@ -77,13 +96,14 @@ const signutCompany = async(parent, args, context, info) => {
             },
             address: [{
                 postCode, 
-                address01, 
+                address01,
+                address02: address02 || "" , 
                 city, 
                 state, 
-                ref
+        
             }]
         }
-
+        
         await new Campany(objectCompany).save();
 
         return({

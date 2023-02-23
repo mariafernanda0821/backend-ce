@@ -20,15 +20,22 @@ const AuthCampanyTypeDefs = gql`
         insuranceCompany
     }
 
-    
+    type userOwner{
+        firstName:String, 
+        lastName:String, 
+        email:String, 
+        numberPhoneUser:String,
+    }
     type Mutation{
-        
-        #magicLinkLogin: Token,
-
+    
         registerCampanyApp(
-            name:String!, code: String!, numberPhone: String!,typeCampany: CampanyType!, 
+            firstName:String, 
+            lastName:String, 
+            email:String, 
+            numberPhoneUser:String,
+            nameCampany:String!, code: String!, numberPhone: String!,typeCampany: CampanyType!, 
             postCode: String!, address01: String!, city: String!, state: String!, 
-            ref: String!, address02: String): Answer 
+            ref: String, address02: String): Answer 
         }
 `;
 
