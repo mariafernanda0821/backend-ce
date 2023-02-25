@@ -276,15 +276,15 @@ const LoginUserAdmin = async (parent, args, context, info) => {
 const MagicLinkLoginAdmin = async (parent, args, context, info) => {
     try {
 
-        const tokenMagicSdk = context.authorization;
-
+        const tokenMagicSdk = context?.authorization;
+        
         if (!tokenMagicSdk) {
 
             throw new Error("NOT_AUTHORIZED-User not authorized, token invalid.")
             
         }
-
-        await isAdmin(email);
+        
+        console.log("tokenMagicSdk tokenMagicSdk", tokenMagicSdk);
 
         const searchIssuer = mAdmin.token.getIssuer(tokenMagicSdk);
 
@@ -293,10 +293,12 @@ const MagicLinkLoginAdmin = async (parent, args, context, info) => {
         console.log("metadata ======> metadata ", metadata);
 
         const { issuer, publicAddress, email } = metadata;
-
+       
         const searchUser = await User.findOne({ email: email });
 
         if (searchUser) {
+            
+            await isAdmin(searchUser.email);
 
             const { token } = await generarJWT({ id: searchUser._id.toString() });
 
