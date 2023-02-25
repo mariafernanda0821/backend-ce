@@ -6,19 +6,13 @@ const schema = mongoose.Schema({
     
     name: {
         type: String,
-        required: [true, ''],
+        required: [true, 'Se require name campany'],
         trim: true,
-        unique: true,
+        //unique: true,
         lowercase: true
 
     },
- 
-    userOwnerId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'User Owner required.']
-    },
-    
+   
     roleId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
@@ -67,6 +61,7 @@ const schema = mongoose.Schema({
             lowercase: true
         }
     }]
+    
 }, {
 
     timestamps: true

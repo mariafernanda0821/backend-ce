@@ -17,7 +17,8 @@ const schema = mongoose.Schema({
         lowercase: true
     },
     password: {
-        type: String
+        type: String,
+        default: null
     },
     
     phone: {

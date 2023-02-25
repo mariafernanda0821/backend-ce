@@ -25,7 +25,9 @@ const generarJWT = async (data) => {
                 }
             );
             const userId = jwt.verify(token, SERVER.SECRETOR_PRIVATE_KEY);
-            console.log("contrario ", userId)
+            
+            //console.log("contrario ", userId)
+            
             resolve({
                 token
             });

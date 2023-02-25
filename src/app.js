@@ -33,8 +33,6 @@ const { InMemoryLRUCache } = require('@apollo/utils.keyvaluecache');
 
 const { json } = require('body-parser');
 
-
-
 const { typeDefs, resolvers } = require('./graphQL/index.js');
 
 const { SERVER } = require('./config');
@@ -61,18 +59,17 @@ const httpServer = require('http').createServer(app);
 const start = async () => {
     try {
 
-        const isAuthenticated = (resolver, root, args, context, info) => {
-            
-            if (info.fieldName === 'registerUserApp') {
-                return resolver(root, args, context, info);
-            }
+        const isAuthenticated = async (resolver, root, args, context, info) => {
+            console.log("isAuthenticated isAuthenticated");
+            // if (info.fieldName !== 'registerUserApp') {
+            //     //return resolver(root, args, context, info);
+            //     return GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+            // }
 
-            if (!context.authorization) {
-               console.log("entre aqui en la configuracion");_
-                throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+            // if (!context.authorization) {
+            //    console.log("entre aqui en la configuracion");_
 
-                //throw new Error('Not authenticated');
-            }
+            // }
             
             return resolver(root, args, context, info);
         };

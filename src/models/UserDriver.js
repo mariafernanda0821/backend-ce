@@ -15,6 +15,29 @@ const schema = mongoose.Schema({
     }, 
 
     towTruck:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TowTruck',
+    }],
+
+    driversLicence:{
+        type: String 
+    },
+
+    towTruckLicencePlate:{
+        type: String 
+
+    },
+}, {
+
+    timestamps: true
+
+});
+
+module.exports = mongoose.model('UserDriver', schema);
+
+
+/* 
+towTruck:[{
         make: {
             type: String,
         }, // DROPDOWN: We could find a schema that includes all vehicles.
@@ -35,18 +58,4 @@ const schema = mongoose.Schema({
         },
     }],
 
-    driversLicence:{
-        type: String 
-    },
-
-    towTruckLicencePlate:{
-        type: String 
-
-    },
-}, {
-
-    timestamps: true
-
-});
-
-module.exports = mongoose.model('User', schema);
+*/

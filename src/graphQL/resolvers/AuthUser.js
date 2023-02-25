@@ -4,11 +4,10 @@ const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 
 
 const {
-    MagicLinkLogin,
     SignutUserApp, 
+    MagicLinkLogin,
     LoginUser,
 } = require('../../controllers/app/authUser');
-
 
 const AuthUserResolver = {
     

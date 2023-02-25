@@ -22,10 +22,9 @@ const AuthTypeDefs = gql`
     type Mutation{
         
         magicLinkLogin: Token,
-
         registerUserApp(firstName: String!, lastName:String!, email:String!, code:String!, phone:String!, password: String ): Answer 
         login(email:String!, password: String!): Token
-    
+        
     }
 `;
 

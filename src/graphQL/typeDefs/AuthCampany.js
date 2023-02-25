@@ -14,8 +14,6 @@ const AuthCampanyTypeDefs = gql`
         message: String
     }
     enum CampanyType {
-        """ const towTruckcompany = "towTruckcompany";
-        const insuranceCompany = "insuranceCompany"; """
         towTruckCompany,
         insuranceCompany
     }
@@ -29,14 +27,20 @@ const AuthCampanyTypeDefs = gql`
     type Mutation{
     
         registerCampanyApp(
-            firstName:String, 
-            lastName:String, 
-            email:String, 
-            numberPhoneUser:String,
-            nameCampany:String!, code: String!, numberPhone: String!,typeCampany: CampanyType!, 
+            firstName:String!, 
+            lastName:String!, 
+            email:String!, 
+            password: String,
+            numberPhoneUser:String!,
+            codeUser: String!,
+            nameCampany:String!, code: String!, numberPhone: String!,typeCompany: CampanyType!, 
             postCode: String!, address01: String!, city: String!, state: String!, 
-            ref: String, address02: String): Answer 
-        }
+            address02: String): Answer 
+    
+        magicLinkLoginAdmin: Token,
+
+        loginAdmin(email:String!, password: String!): Token
+    }
 `;
 
 // firstName,

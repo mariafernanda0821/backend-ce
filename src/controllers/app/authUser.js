@@ -40,7 +40,7 @@ const SignutUserApp = async (parent, args, context, info) => {
             phone,
             password,
         } = args;
-
+        
         const searchUser = await User.findOne({ email: email });
 
         if (searchUser) {
@@ -131,8 +131,7 @@ const LoginUser = async (parent, args, context, info) => {
             }
         }
 
-        const comparePassword = await bcrypt.compare(password, searchUser.password);
-
+        const comparePassword = searchUser?.password ? await bcrypt.compare(password, searchUser.password) : false;
 
         if (!comparePassword) {
 
@@ -154,7 +153,7 @@ const LoginUser = async (parent, args, context, info) => {
 
         console.log(error);
 
-        const { message, extensions } = await catchError(error);
+        const { message, extensions } = catchError(error);
 
         throw new GraphQLError(message, {
             extensions

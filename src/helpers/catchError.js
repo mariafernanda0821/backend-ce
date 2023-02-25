@@ -72,7 +72,7 @@ const catchError = (error) => {
                         status: 412,
                         ok: false,
                         message: message,//'Data required to make the request',
-                        required: required,
+                        //required: required,
                     }
                 }
             });
