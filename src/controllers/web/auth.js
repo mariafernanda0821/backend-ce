@@ -143,7 +143,7 @@ const signutCompany = async (parent, args, context, info) => {
         return ({
             status: 200,
             ok: true,
-            message: "Se ha creado el usuario perfectamente."
+            message: "Successful process"
         });
 
     } catch (error) {
