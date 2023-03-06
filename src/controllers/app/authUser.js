@@ -193,8 +193,8 @@ const MagicLinkLogin = async (parent, args, context, info) => {
                 publicAddress: publicAddress
             };
 
-            await User.findOneAndUpdate({ email: email }, { magicLink: magicLink });
-
+           await User.findOneAndUpdate({ email: email }, { magicLink: magicLink });
+           
             return {
                 ok: true,
                 token,

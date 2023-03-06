@@ -53,7 +53,8 @@ const CODIGO = {
 const catchError = (error) => {
     try {
         //let message="";
-        console.log(error);
+        console.log("catchError ",error);
+        
         let required = []
 
         if (error.errors) {

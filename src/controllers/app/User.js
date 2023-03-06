@@ -10,6 +10,9 @@ const { GraphQLError } = require('graphql');
 
 const mongoose = require('mongoose');
 
+//throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
+
+
 
 const searchUserApp = async (parent, args, context, info) => {
     try {
@@ -18,7 +21,7 @@ const searchUserApp = async (parent, args, context, info) => {
 
         if (!token) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+            throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
 
         }
 
@@ -54,7 +57,7 @@ const searchUserApp = async (parent, args, context, info) => {
             }
           ]);
 
-        return (user)
+        return (user);
 
     } catch (error) {
         console.log(error);
@@ -87,7 +90,7 @@ const AddVehicleUserApp = async (parent, args, context, info) => {
 
         if (!token) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+            throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
 
         }
         
@@ -144,7 +147,7 @@ const UpdateVehicleUserApp = async (parent, args, context, info) => {
 
         if (!token) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+            throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
 
         }
         
@@ -161,8 +164,8 @@ const UpdateVehicleUserApp = async (parent, args, context, info) => {
         const searchVehicleUserApp = await UserApp.findOne({userId : userId.id,vehicleId:{$in: [vehicleId]} });
     
         if(!searchVehicleUserApp){
-            console.log("entre aqui")
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+           
+            throw new Error('ERROR_DATA-This vehicle does not correspond to the user.');
 
         }
 
@@ -204,7 +207,7 @@ const UpdateUserApp = async (parent, args, context, info) => {
 
         if (!token) {
 
-            throw new GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
+            throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
 
         }
 
@@ -220,7 +223,7 @@ const UpdateUserApp = async (parent, args, context, info) => {
             },
         }
 
-        await User.findByIdAndUpdate(userId.id, updateUser )
+        await User.findByIdAndUpdate(userId.id, updateUser );
 
         return{
             status: 200,
@@ -231,7 +234,7 @@ const UpdateUserApp = async (parent, args, context, info) => {
     } catch (error) {
         console.log(error);
 
-        const { message, extensions } = await catchError(error);
+        const { message, extensions } = catchError(error);
 
         console.log(message, "========",extensions );
 

@@ -3,7 +3,7 @@ const {gql} = require('apollo-server-express');
 
 const UserTypeDefs = gql`
     extend type Query {
-        User: User
+        user: User
     
     }
 
@@ -54,28 +54,28 @@ const UserTypeDefs = gql`
     type Mutation {
 
         updateUserApp(
-            make: String,
-            model: String,
-            year: String,
-            colour: String,
-            licencePlate: String
-            ) : Answer,
+            firstName: String!,
+            lastName: String!, 
+            email: String!,
+            code: String!,
+            numberPhone: String!,
+            ) : Answer
 
         addVehicleUserApp(
-            make: String,
-            model: String,
-            year: String,
-            colour: String,
-            licencePlate: String
+            make: String!,
+            model: String!,
+            year: String!,
+            colour: String!,
+            licencePlate: String!
         ): Answer,
 
         updateVehicleUserApp(
-            vehicleId: String,
-            make: String,
-            model: String,
-            year: String,
-            colour: String,
-            licencePlate: String,
+            vehicleId: String!,
+            make: String!,
+            model: String!,
+            year: String!,
+            colour: String!,
+            licencePlate: String!,
         ):Answer
     }
 `;

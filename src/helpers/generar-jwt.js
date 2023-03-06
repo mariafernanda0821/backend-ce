@@ -8,8 +8,8 @@ const MESSAGE = 'ocurrio un error en crear el token'
 
 const generarJWT = async (data) => {
 
-    const  {id } = data;
-    
+    const { id } = data;
+
     return new Promise((resolve, reject) => {
         try {
 
@@ -24,9 +24,6 @@ const generarJWT = async (data) => {
                     expiresIn: SERVER.EXPIRES_ID
                 }
             );
-            const userId = jwt.verify(token, SERVER.SECRETOR_PRIVATE_KEY);
-            
-            //console.log("contrario ", userId)
             
             resolve({
                 token
@@ -36,9 +33,7 @@ const generarJWT = async (data) => {
 
             console.log(error);
 
-            reject({
-                MESSAGE
-            });
+            reject('NOT_AUTHORIZED-User not authorized, token invalid.');
         }
 
     })
@@ -46,34 +41,28 @@ const generarJWT = async (data) => {
 
 const searchValuejwtUser = async (token) => {
 
-   return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
 
             const userId = jwt.verify(token, SERVER.SECRETOR_PRIVATE_KEY);
-            
-            const searchUser = await User.findById(userId.id);
-                        
-            if(!searchUser){
 
-                reject({message: "unauthorized user does not exist"})
-            
+            const searchUser = await User.findById(userId.id);
+
+            if (!searchUser) {
+                
+                reject(new Error('NOT_AUTHORIZED-User not authorized, User does not exist.'));
+
             }
 
-            //return {id: _id}
-
-            resolve({id: searchUser._id.toString()});
-
-            //return(userId);
+            resolve({ id: searchUser._id.toString() });
 
         } catch (error) {
 
-            console.log("=============>", error);
-            reject(error)
-            //throw(error);
+            reject(new Error('NOT_AUTHORIZED-User not authorized, User does not exist.'));
         }
 
     });
- 
+
 }
 
 

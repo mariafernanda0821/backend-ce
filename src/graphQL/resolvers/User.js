@@ -9,7 +9,7 @@ const {
 const UserResolver = {
     
     Query: {
-        User: (parent, args, context, info) => searchUserApp(parent, args, context, info),
+        user: (parent, args, context, info) => searchUserApp(parent, args, context, info),
        // Hello: () => 'hello wordl Maria Fernanda'
     },
     
@@ -19,7 +19,7 @@ const UserResolver = {
 
         addVehicleUserApp: (parent, args, context, info) => AddVehicleUserApp(parent, args, context, info),
     
-        updateVehicleUserApp: (parent, args, context, info) =>UpdateVehicleUserApp(parent, args, context, info),
+        updateVehicleUserApp: (parent, args, context, info) => UpdateVehicleUserApp(parent, args, context, info),
     }
 };
 
