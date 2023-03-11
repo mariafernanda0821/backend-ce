@@ -15,15 +15,20 @@ const AuthTypeDefs = gql`
         ok: Boolean,
         status: Int,
         message: String,
-        user: String,
     }
 
     
     type Mutation{
         
         magicLinkLogin: Token,
-        registerUserApp(firstName: String!, lastName:String!, email:String!, code:String!, phone:String!, password: String ): Answer 
-        login(email:String!, password: String!): Token
+        
+        registerUserApp(firstName: String!, lastName:String!, email:String!, code:String!, phone:String!, password: String ): Answer ,
+        
+        login(email:String!, password: String!): Token,
+        
+        forgotPassword(email: String!):Answer,
+        
+        changePasswordByCode(email: String!, password: String!, code: String! ):Answer,
         
     }
 `;

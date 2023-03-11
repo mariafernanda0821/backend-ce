@@ -1,5 +1,3 @@
-
-
 const CODIGO = {
     NOT_AUTHORIZED: {
         message: 'invalid token',
@@ -49,6 +47,7 @@ const CODIGO = {
     },
 
 }
+
 
 const catchError = (error) => {
     try {

@@ -40,8 +40,6 @@ const SERVER = {
 
   EMAIL_PORT: process.env.EMAIL_PORT ,
 
-  EMAIL_USER: process.env.EMAIL_USER,
-
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
 
   SECRETOR_PRIVATE_KEY: process.env.SECRETOR_PRIVATE_KEY,

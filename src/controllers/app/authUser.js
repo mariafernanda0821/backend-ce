@@ -8,12 +8,16 @@ const { generarJWT } = require('../../helpers/generar-jwt');
 
 const { catchError, CODIGO } = require('../../helpers/catchError');
 
+const { sendEmail } = require('../../helpers/sendEmail');
+
+
 const bcrypt = require('bcryptjs')
 
 //modles
 const User = require('../../models/User');
 const Role = require('../../models/Role');
-const UserApp = require('../../models/UserApp')
+const UserApp = require('../../models/UserApp');
+const Authorization = require('../../models/Authorization');
 
 
 const mAdmin = new Magic(SERVER.MAGIC_SECRET_KEY);
@@ -40,13 +44,13 @@ const SignutUserApp = async (parent, args, context, info) => {
             phone,
             password,
         } = args;
-        
+
         const searchUser = await User.findOne({ email: email });
 
         if (searchUser) {
 
             throw new Error("ERROR_DATA-The email is already registered.");
-        
+
         }
 
         if (password) {
@@ -71,7 +75,7 @@ const SignutUserApp = async (parent, args, context, info) => {
         };
 
         if (hash) {
-            
+
             newObjectUser.password = hash;
 
         }
@@ -86,7 +90,7 @@ const SignutUserApp = async (parent, args, context, info) => {
 
         return ({
             ok: true,
-            
+
             status: 200,
 
             message: "The user has been created perfectly.",
@@ -136,7 +140,7 @@ const LoginUser = async (parent, args, context, info) => {
         if (!comparePassword) {
 
             throw new Error("ERROR_DATA-Incorrect password.");
-         
+
         }
 
         const { token } = await generarJWT({ id: searchUser._id.toString() });
@@ -144,6 +148,7 @@ const LoginUser = async (parent, args, context, info) => {
         return {
             ok: true,
             token,
+            status: 200,
             register: true,
             message: "You have perfectly started the session."
         }
@@ -170,8 +175,8 @@ const MagicLinkLogin = async (parent, args, context, info) => {
 
         if (!tokenMagicSdk) {
 
-            throw new Error("NOT_AUTHORIZED-User not authorized, token invalid.")
-            
+            throw new Error("NOT_AUTHORIZED-User not authorized, token invalid.");
+
         }
 
         const searchIssuer = mAdmin.token.getIssuer(tokenMagicSdk);
@@ -193,8 +198,8 @@ const MagicLinkLogin = async (parent, args, context, info) => {
                 publicAddress: publicAddress
             };
 
-           await User.findOneAndUpdate({ email: email }, { magicLink: magicLink });
-           
+            await User.findOneAndUpdate({ email: email }, { magicLink: magicLink });
+
             return {
                 ok: true,
                 token,
@@ -205,6 +210,7 @@ const MagicLinkLogin = async (parent, args, context, info) => {
         }
 
         return {
+            status: 200,
             ok: true,
             token: null,
             register: false,
@@ -216,7 +222,59 @@ const MagicLinkLogin = async (parent, args, context, info) => {
 
         console.log(error);
 
-        const { message, extensions } = await catchError(error);
+        const { message, extensions } = catchError(error);
+
+        throw new GraphQLError(message, {
+            extensions
+        });
+
+    }
+}
+
+const ForgotPassword = async (parent, args, context, info) => {
+    let createdCode;
+    try {
+        const { email } = args;
+
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+
+            throw new Error("ERROR_DATA-User not registered");
+        }
+
+        //sendEmail data={message, code}
+        const code = "4512"; //Math.floor(1000 + Math.random() * 9000);
+
+        createdCode = await Authorization({
+            userId: user._id,
+            code: code
+        }).save();
+
+        const data = {
+            message: "The code to recover your account is as follows.",
+            code: code
+        }
+
+        const subject = "Forgot Password";
+
+        //const answerEmail = await sendEmail(data, user?.email, subject, 'forgotPassword');
+
+        const answerEmail = "The email has been sent perfectly."
+
+        return {
+            status: 200,
+            ok: true,
+            message: answerEmail
+        }
+
+    } catch (error) {
+        
+        console.log(error);
+
+        if(createdCode?._id) await Authorization.findByIdAndDelete(createdCode._id);
+
+        const { message, extensions } = catchError(error);
 
         throw new GraphQLError(message, {
             extensions
@@ -226,8 +284,63 @@ const MagicLinkLogin = async (parent, args, context, info) => {
 }
 
 
+const ChangePasswordByCode = async (parent, args, context, info) => {
+    try {
+        const { code, email, password } = args;
+
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+
+            throw new Error("ERROR_DATA-User not registered.");
+        }
+
+        //sendEmail data={message, code}
+        const searchCode = await Authorization.findOne({
+            userId: user._id,
+            code: code
+        });
+
+        if(!searchCode){
+
+            throw new Error("ERROR_DATA-The supplied code is incorrect, please verify");
+        
+        }
+        
+        const salt = bcrypt.genSaltSync(10);
+
+        const hash = bcrypt.hashSync(password, salt);
+
+        user.password = hash;
+
+        user.save();
+
+        await Authorization.findByIdAndDelete(searchCode._id);
+
+        return( { 
+            status: 200,
+            ok: true,
+            message: "Password has been perfectly changed."
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        const { message, extensions } = catchError(error);
+
+        throw new GraphQLError(message, {
+            extensions
+        });
+
+    }
+}
+
+
+
 module.exports = {
     MagicLinkLogin,
     SignutUserApp,
     LoginUser,
+    ForgotPassword,
+    ChangePasswordByCode,
 }
