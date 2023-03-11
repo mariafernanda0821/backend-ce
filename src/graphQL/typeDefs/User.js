@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server-express');
+const { gql } = require('apollo-server-express');
 
 
 const UserTypeDefs = gql`
@@ -76,6 +76,11 @@ const UserTypeDefs = gql`
             year: String!,
             colour: String!,
             licencePlate: String!,
+        ):Answer
+
+        changePasswordForUserApp(
+            password: String!,
+            repeatPassword: String!,
         ):Answer
     }
 `;

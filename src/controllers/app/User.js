@@ -1,17 +1,18 @@
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const { GraphQLError } = require('graphql');
+//models
 const User = require('../../models/User');
 const UserApp = require('../../models/UserApp');
 const Vehicle = require('../../models/Vihicle');
-
+//helpers
 const { generarJWT, searchValuejwtUser } = require('../../helpers/generar-jwt');
-
 const { catchError, CODIGO } = require('../../helpers/catchError');
 
-const { GraphQLError } = require('graphql');
 
-const mongoose = require('mongoose');
 
 //throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
-
+//ERROR_DATA
 
 
 const searchUserApp = async (parent, args, context, info) => {
@@ -244,12 +245,59 @@ const UpdateUserApp = async (parent, args, context, info) => {
     }
 }
 
+const ChangePasswordForUserApp = async (parent, args, context, info) => {
+    try {
+        const {
+           password,
+           repeatPassword,
+        }= args;
+
+        const token = context.authorization;
+
+        if (!token) throw new Error('NOT_AUTHORIZED-User not authorized, token invalid.');
+
+        if (password !== repeatPassword) throw new Error('ERROR_DATA-Password must be the same.');
+
+        const userId = await searchValuejwtUser(token); //return {id: id}
+        
+        const salt = bcrypt.genSaltSync(10);
+
+        const hash = bcrypt.hashSync(password, salt);
+
+        const updateUser = {
+            password: hash
+        }
+
+        await User.findByIdAndUpdate(userId.id, updateUser);
+
+        return{
+            status: 200,
+            ok: true,
+            message: "Password has been successfully changed"
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+        const { message, extensions } = catchError(error);
+
+        console.log(message, "========",extensions );
+
+        throw new GraphQLError(message, {
+            extensions
+        });
+    }
+}
+
 
 module.exports = {
     searchUserApp,
     AddVehicleUserApp,
     UpdateUserApp,
     UpdateVehicleUserApp,
+    ChangePasswordForUserApp,
+
 }
 
 

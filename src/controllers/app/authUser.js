@@ -11,7 +11,7 @@ const { catchError, CODIGO } = require('../../helpers/catchError');
 const { sendEmail } = require('../../helpers/sendEmail');
 
 
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
 
 //modles
 const User = require('../../models/User');

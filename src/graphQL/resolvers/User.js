@@ -3,6 +3,7 @@ const {
     AddVehicleUserApp,
     UpdateUserApp,
     UpdateVehicleUserApp,
+    ChangePasswordForUserApp
 } = require('../../controllers/app/User');
 
 
@@ -20,6 +21,9 @@ const UserResolver = {
         addVehicleUserApp: (parent, args, context, info) => AddVehicleUserApp(parent, args, context, info),
     
         updateVehicleUserApp: (parent, args, context, info) => UpdateVehicleUserApp(parent, args, context, info),
+    
+        changePasswordForUserApp:(parent, args, context, info) => ChangePasswordForUserApp(parent, args, context, info),
+    
     }
 };
 
