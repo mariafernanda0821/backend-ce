@@ -39,41 +39,18 @@ const { SERVER } = require('./config');
 
 const { CODIGO } = require('./helpers/catchError');
 
-const fs = require('fs');
+//const fs = require('fs');
 
-const https = require('https');
+//const https = require('https');
 
 const app = express();
-//console.log(path.resolve('./src/cert/key.pem'))
 
-// const options = {
-//     key:  fs.readFileSync(path.resolve('./src/cert/key1.pem')),
-//     cert: fs.readFileSync(path.resolve('./src/cert/cert1.pem')),
-//     //passphrase: ['instatow']
-// }
 
 const httpServer = require('http').createServer(app);
 
-//const httpsServer = https.createServer(options, app);
 
 const start = async () => {
     try {
-
-        const isAuthenticated = async (resolver, root, args, context, info) => {
-            console.log("isAuthenticated isAuthenticated");
-            // if (info.fieldName !== 'registerUserApp') {
-            //     //return resolver(root, args, context, info);
-            //     return GraphQLError(CODIGO["NOT_AUTHORIZED"].message, CODIGO["NOT_AUTHORIZED"].extensions);
-            // }
-
-            // if (!context.authorization) {
-            //    console.log("entre aqui en la configuracion");_
-
-            // }
-            
-            return resolver(root, args, context, info);
-        };
-
         let plugins = [];
         
         if (SERVER.NODE_ENV === 'production') {
@@ -87,7 +64,7 @@ const start = async () => {
             resolvers,
             plugins: plugins, //[ApolloServerPluginDrainHttpServer({ httpServer: httpsServer })],
             context: ({ req, res }) => ({ req, res, authorization: req.headers.authorization }),
-            middlewares: [isAuthenticated],
+            //middlewares: [isAuthenticated],
             cache: new InMemoryLRUCache(),
             //cors({ origin: [`http://localhost:${SERVER.PORT}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
         });
@@ -102,19 +79,9 @@ const start = async () => {
         app.use(
             '/graphql',
             cors({ origin: [`http://localhost:${SERVER.PORT}`, `http://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
-            //cors(),
             bodyParser.json(),
             expressMiddleware(apolloServer)
-            // expressMiddleware(apolloServer,{
-            //     context:async ({ req, res, next }) => {
-            //         console.log("{ req, res, next }", { req, res, next })
-            //         return({ 
-            //             req, 
-            //             res,
-            //             next,
-            //         })
-            //     },
-            //   } ),
+
         );
 
         app.use(express.static('storage'));
@@ -148,10 +115,7 @@ const start = async () => {
         // Express.json
         app.use(express.json({ extended: true }));
 
-        // Documentation
-        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-        app.use(require('./routes/index'));
+        //app.use(require('./routes/index'));
 
         // Front in react
         app.get('*', (req, res) => {

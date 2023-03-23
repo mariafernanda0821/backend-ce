@@ -11,32 +11,20 @@ const AuthTypeDefs = gql`
         register: Boolean,
     }
 
-    type Answer{
+    type  Respuesta{
         ok: Boolean,
         status: Int,
         message: String,
     }
-
     
     type Mutation{
         
-        magicLinkLogin: Token,
-        
-        registerUserApp(firstName: String!, lastName:String!, email:String!, code:String!, phone:String!, password: String ): Answer ,
+        registrar(nombre: String!, apellido:String!, email:String!,  password: String ): Respuesta,
         
         login(email:String!, password: String!): Token,
-        
-        forgotPassword(email: String!):Answer,
-        
-        changePasswordByCode(email: String!, password: String!, code: String! ):Answer,
         
     }
 `;
 
-// firstName,
-//     lastName,
-//     email,
-//     code,
-//     phone,
 
-    module.exports = AuthTypeDefs;
+module.exports = AuthTypeDefs;

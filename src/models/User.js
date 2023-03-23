@@ -3,47 +3,32 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const schema = mongoose.Schema({
     
-    firstName: {
+    nombre: {
         type: String,
-        required: [true, 'Name is required'],
+        required: [true, 'El nombre es requerido.'],
         trim: true,
         lowercase: true
     },
     
-    lastName: {
+    apellido: {
         type: String,
-        required: [true, 'Last Name is required'],
+        required: [true, 'El apellido es requerido.'],
         trim: true,
         lowercase: true
     },
+
     password: {
         type: String,
-        default: null
-    },
-    
-    phone: {
-        code:{
-            type: String,
-            default: "+00",
-            trim: true,
-            lowercase: true
-        },
-        number:{
-            type: String,
-            required: [true, 'Phone is required.'],
-            trim: true,
-            lowercase: true
-        }
+        required: [true, 'Contrasena es requerido.'],
+       
     },
     
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: [true, 'El correo Electronico es querido.'],
         trim: true,
         unique: true,
         lowercase: true,
-       // validate: [true, 'Please fill a valid email address'],
-
     },
     
     active: {
@@ -58,42 +43,25 @@ const schema = mongoose.Schema({
         //default: null
     },
     
-    roleId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role',
-        required: [true, 'User role required.']
-    }],
+    role: {
+        type: String,
+        default: 'UserApp'
+    },
 
     paymentMethods: [{
         paymentMethodId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'PaymentMethod',
         },
-        customerId: {
-            type: String,
+        data: {
+            type: Object,
+            default: null
         },
     }],
 
-    magicLink:{
-        issuer:{
-            type: String,
-            trim: true,
-        },
-        publicAddress:{
-            type: String,
-            trim: true,
-        }
-    },
-
     delete: {
-        deleted: {
-            type: Boolean,
-            default: false
-        },
-        reason: {
-            type: String,
-            require: false
-        }
+       type: Boolean,
+       default: false
     },
 
 }, {
@@ -104,6 +72,6 @@ const schema = mongoose.Schema({
 
 // Apply uniqueValidator plugin to userSchema
 //This email address is already registered
-schema.plugin(uniqueValidator, { message: 'This {PATH} address is already registered'});
+schema.plugin(uniqueValidator, { message: 'El {PATH} ya esta registrado.'});
 
 module.exports = mongoose.model('User', schema);
