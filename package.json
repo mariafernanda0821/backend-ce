@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/mariaf0821/instatow-backend.git"
+    "url": "git+https://github.com/mariafernanda0821/backend-ce.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/mariaf0821/instatow-backend/issues"
+    "url": "https://github.com/mariafernanda0821/backend-ce/issues"
   },
-  "homepage": "https://gitlab.com/mariaf0821/instatow-backend#readme",
+  "homepage": "https://github.com/mariafernanda0821/backend-ce#readme",
   "dependencies": {
     "@apollo/server": "^4.3.0",
     "@magic-sdk/admin": "^1.8.0",
@@ -41,6 +41,7 @@
     "socket.io": "^4.5.3",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.6.0",
+    "uuid": "^9.0.0",
     "yamljs": "^0.3.0"
   }
 }

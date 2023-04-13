@@ -45,7 +45,8 @@ const schema = mongoose.Schema({
     
     role: {
         type: String,
-        default: 'UserApp'
+        enum: ['userApp', 'administracion'],
+        default: 'userApp'
     },
 
     paymentMethods: [{

@@ -1,53 +1,3 @@
-const CODIGO = {
-    NOT_AUTHORIZED: {
-        message: 'invalid token',
-        extensions: {
-            code: 'NOT_AUTHORIZED',
-            myCustomExtensions: {
-                ok: false,
-                status: 401,
-                message: 'user not authorized, token invalid'
-            }
-        }
-    },
-    ERROR: {
-        message: 'An unexpected error occurred',
-        extensions: {
-            code: 'ERROR',
-            myCustomExtensions: {
-                status: 400,
-                ok: false,
-                message: 'An unexpected error occurred'
-            }
-        }
-    },
-
-    BASE_DATO: {
-        message: 'Data required to make the request',
-        extensions: {
-            code: 'ERROR_DATA',
-            myCustomExtensions: {
-                ok: false,
-                status: 412,
-                message: 'Data required to make the request',
-                required: []
-            }
-        }
-    },
-    USERNOTREGISTER: {
-        message: 'the user is not registered',
-        extensions: {
-            code: 'ERROR',
-            myCustomExtensions: {
-                status: 412,
-                message: 'the user is not registered',
-                required: []
-            }
-        }
-    },
-
-}
-
 
 const catchError = (error) => {
     try {
@@ -55,13 +5,13 @@ const catchError = (error) => {
         console.log("catchError ",error);
         
         let required = []
+        let message;
 
         if (error.errors) {
 
             for (const errs in error.errors) {
-
-                required = required.concat(`${error.errors[errs].message}`);
-                message += `${error.errors[errs].message}, `
+                message += `${error.errors[errs].message}.`;
+                break;
             }
 
             return ({
@@ -71,8 +21,7 @@ const catchError = (error) => {
                     myCustomExtensions: {
                         status: 412,
                         ok: false,
-                        message: message,//'Data required to make the request',
-                        //required: required,
+                        message: message
                     }
                 }
             });
@@ -143,5 +92,4 @@ const catchError = (error) => {
 
 module.exports = {
     catchError,
-    CODIGO,
 }
