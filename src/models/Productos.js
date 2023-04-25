@@ -24,6 +24,9 @@ const schema = mongoose.Schema({
         type: String,
         required: [true, "Se requiere el tipo de productos."]
     },
+    imagen:{
+        type: String,
+    },
     
     descripcion:{
         type: String,

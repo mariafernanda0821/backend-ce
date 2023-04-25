@@ -15,6 +15,7 @@ const schema = mongoose.Schema({
     responsable: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Administrador',
+        required: [true, "Se requiere El administrador."]
     },
     delete: {
        type: Boolean,

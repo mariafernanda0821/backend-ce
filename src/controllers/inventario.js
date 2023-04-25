@@ -12,19 +12,22 @@ const AgregarProductos = async (parent, args, context, info) =>{
     
         await Promise.all(productosJson.map(async item =>{
             try {
-                
-                await new Producto({
-                    codigo: item?.codigo,
-                    
-                    tipo:item?.tipo,
-                    
-                    categoria: categoria,
-                    
-                    nombre: item?.name,
+                [1,2,3,4,5,6,7,8,9,10].map( async item => {
+                    await new Producto({
+                        codigo: `${item?.codigo}#0${item}`,
+                        
+                        tipo:item?.tipo,
+                        
+                        categoria: categoria,
+                        
+                        nombre: `${item?.name}#0${item}`,
+    
+                        descripcion: item.descripcion,
 
-                    descripcion: item.descripcion,
+                        imagen: `${item?.imagen}#0${item}`
+                    }).save();
 
-                }).save();
+                })
 
             } catch (error) {
                 throw new Error("ERROR_DATA-Ocurrio un error en agregar inventario.");
@@ -58,32 +61,36 @@ const AgregarRegistrodeInventario = async (parent, args, context, info) =>{
         const {administrador, productos} = invetarioJson;
 
         const admin = await Administrador.findOne({credenciales: administrador});
-
+       
+        if(!admin)  throw new Error("ERROR_DATA-Administrador No existe.");
 
         const inventario = await new InventarioRegistro({
             nombre: `Inventario-${Date.now()}`,
             date: new Date(),
+            responsable: admin?._id
         }).save();
 
+        const productosParaInventario = await Producto.find();
 
-        await Promise.all(productos.map(async item =>{
+        await Promise.all(productosParaInventario.map(async item =>{
             try {
                 const producto = await Producto.findOne({codigo:item?.codigo});
 
                 await new InventarioProductos({
                     inventarioRegistroId: inventario?._id,
                     productoId: producto?._id,
-                    cantidadDisponible: item?.Inicial,
-                    cantodadInicial: item?.Inicial,
+                    cantidadDisponible: 20,//item?.Inicial,
+                    cantodadInicial: 20,//item?.Inicial,
                     cantidadVentida: 0,
-                    costoIndividual: item?.costoIndividual,
+                    costoIndividual: 5//item?.costoIndividual,
                 }).save();
 
             } catch (error) {
+
                 throw new Error("ERROR_DATA-Ocurrio un error en agregar inventario.");
+
             }
             
-
         }));
 
         return({
@@ -104,7 +111,9 @@ const AgregarRegistrodeInventario = async (parent, args, context, info) =>{
     }
 }
 
+
 module.exports = {
     AgregarRegistrodeInventario,
+    AgregarProductos,
   
 }

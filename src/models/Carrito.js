@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-//const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const schema = mongoose.Schema({
     
@@ -12,6 +12,7 @@ const schema = mongoose.Schema({
     userId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        unique:true,
         required: [true, "Se requiere el usuario del carrito."]
     },
     
@@ -28,6 +29,6 @@ const schema = mongoose.Schema({
 
 // Apply uniqueValidator plugin to userSchema
 //This email address is already registered
-//schema.plugin(uniqueValidator, { message: 'El {PATH} ya esta registrado.'});
+schema.plugin(uniqueValidator, { message: 'El {PATH} ya tiene carrito.'});
 
 module.exports = mongoose.model('Carrito', schema);

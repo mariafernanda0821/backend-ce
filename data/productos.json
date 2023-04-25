@@ -1,0 +1,75 @@
+[
+    {
+        "codigo":"000",
+        "tipo":"collar",
+        "categoria":"artesanal",
+        "nombre":"Collar",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"collar"
+    },
+    {
+        "codigo":"000",
+        "tipo":"collar",
+        "categoria":"Indigena",
+        "nombre":"Collar",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"collar"
+    },
+    {
+        "codigo":"000",
+        "tipo":"collar",
+        "categoria":"Moda",
+        "nombre":"Collar",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"collar"
+    },
+    {
+        "codigo":"000",
+        "tipo":"pulsera",
+        "categoria":"artesanal",
+        "nombre":"pulsera",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"pulsera"
+    },
+    {
+        "codigo":"000",
+        "tipo":"pulsera",
+        "categoria":"Indigena",
+        "nombre":"pulsera",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"pulsera"
+    },
+    {
+        "codigo":"000",
+        "tipo":"pulsera",
+        "categoria":"Moda",
+        "nombre":"pulsera",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"pulsera"
+    },
+    {
+        "codigo":"000",
+        "tipo":"anillo",
+        "categoria":"artesanal",
+        "nombre":"anillo",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"anillo"
+    },
+    {
+        "codigo":"000",
+        "tipo":"anillo",
+        "categoria":"Indigena",
+        "nombre":"anillo",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"anillo"
+    },
+    {
+        "codigo":"000",
+        "tipo":"anillo",
+        "categoria":"Moda",
+        "nombre":"anillo",
+        "descripcion": "complemento en forma de sarta o cadena más o menos larga que rodea el cuello o parte superior del pecho como adorno",
+        "imagen":"anillo"
+    }
+    
+]

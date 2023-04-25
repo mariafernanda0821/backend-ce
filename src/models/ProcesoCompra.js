@@ -8,11 +8,17 @@ const schema = mongoose.Schema({
         ref: 'UserId',
     },
 
-    inventarioproductoId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Producto',
-    }],
-
+    compra:[
+        {
+            cantidad: {
+                type: Number,
+            },
+            inventarioProductoId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'InventarioProducto',
+            }
+        }
+    ],
     metodoPago: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'MetodoPago',
@@ -26,9 +32,11 @@ const schema = mongoose.Schema({
        type: Boolean,
        default: false
     },
+
     montoTotal: {
         type: Number
     },
+
     procesoBanco: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ProcesoBanco',
