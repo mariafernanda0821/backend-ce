@@ -22,6 +22,8 @@ const AuthTypeDefs = gql`
         registrar(nombre: String!, apellido:String!, email:String!,  password: String ): Respuesta,
         
         login(email:String!, password: String!): Token,
+
+        registrarAdmin(nombre: String!, apellido:String!, email:String!,  password: String! ):Respuesta
         
     }
 `;

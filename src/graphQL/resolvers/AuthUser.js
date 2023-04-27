@@ -1,6 +1,7 @@
 const {
     Registrar,
-    Login
+    Login,
+    RegistrarAdmin
 } = require('../../controllers/auth');
 
 const AuthUserResolver = {
@@ -11,6 +12,7 @@ const AuthUserResolver = {
         
         login: (parent, args, context, info) => Login(parent, args, context, info),
         
+        registrarAdmin: (parent, args, context, info) => RegistrarAdmin(parent, args, context, info),
         
     }
 };

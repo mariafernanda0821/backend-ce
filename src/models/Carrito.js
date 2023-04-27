@@ -3,7 +3,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const schema = mongoose.Schema({
     
-    productos: [
+    productoId: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Productos',

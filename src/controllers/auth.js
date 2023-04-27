@@ -172,6 +172,9 @@ const RegistrarAdmin = async (parent, args, context, info) => {
 
     }
 }
+
+
+
 module.exports = {
     Registrar,
     Login,

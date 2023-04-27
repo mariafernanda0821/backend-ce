@@ -1,40 +1,43 @@
 const InventarioRegistro = require('../models/InventarioRegistro');
 const InventarioProductos = require('../models/InventarioProductos');
 const Administrador = require('../models/Administrador');
-const invetarioJson = require('../../data/inventario.json');
+//const invetarioJson = require('../../data/inventario.json');
 const productosJson = require('../../data/productos.json');
-const Producto = require('../models/Productos');
+const Producto = require('../models/Producto');
 
 const { v4: uuidv4 } = require('uuid');
 
 const AgregarProductos = async (parent, args, context, info) =>{
     try {
     
-        await Promise.all(productosJson.map(async item =>{
+        const x = productosJson.map(async item =>{
             try {
-                [1,2,3,4,5,6,7,8,9,10].map( async item => {
+                console.log("item", item);
+                await Promise.all([1,2,3,4,5,6,7,8,9,10].map(async index => {
+                    
                     await new Producto({
-                        codigo: `${item?.codigo}#0${item}`,
+                        codigo: `${item?.codigo}-0${index}`,
                         
-                        tipo:item?.tipo,
+                        tipo: item?.tipo,
                         
-                        categoria: categoria,
+                        categoria: item?.categoria,
                         
-                        nombre: `${item?.name}#0${item}`,
+                        nombre: `${item?.nombre}-0${index}`,
     
-                        descripcion: item.descripcion,
+                        descripcion: item?.descripcion,
 
-                        imagen: `${item?.imagen}#0${item}`
+                        imagen: `${item?.imagen}-0${index}`
                     }).save();
 
-                })
+                }))
+                return;
 
             } catch (error) {
+
                 throw new Error("ERROR_DATA-Ocurrio un error en agregar inventario.");
             }
             
-
-        }));
+        });
 
         return({
             ok: false,
@@ -58,15 +61,16 @@ const AgregarProductos = async (parent, args, context, info) =>{
 const AgregarRegistrodeInventario = async (parent, args, context, info) =>{
     try {
         
-        const {administrador, productos} = invetarioJson;
+        //const {administrador, productos} = invetarioJson;
+        const { codigo} = args;
 
-        const admin = await Administrador.findOne({credenciales: administrador});
+        const admin = await Administrador.findOne({credenciales: codigo});
        
         if(!admin)  throw new Error("ERROR_DATA-Administrador No existe.");
 
         const inventario = await new InventarioRegistro({
             nombre: `Inventario-${Date.now()}`,
-            date: new Date(),
+            fecha: new Date(),
             responsable: admin?._id
         }).save();
 
@@ -74,17 +78,17 @@ const AgregarRegistrodeInventario = async (parent, args, context, info) =>{
 
         await Promise.all(productosParaInventario.map(async item =>{
             try {
-                const producto = await Producto.findOne({codigo:item?.codigo});
-
+            
                 await new InventarioProductos({
                     inventarioRegistroId: inventario?._id,
-                    productoId: producto?._id,
+                    productoId: item?._id,
                     cantidadDisponible: 20,//item?.Inicial,
                     cantodadInicial: 20,//item?.Inicial,
                     cantidadVentida: 0,
                     costoIndividual: 5//item?.costoIndividual,
                 }).save();
 
+                return;
             } catch (error) {
 
                 throw new Error("ERROR_DATA-Ocurrio un error en agregar inventario.");
