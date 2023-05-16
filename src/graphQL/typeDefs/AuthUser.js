@@ -3,6 +3,20 @@ const { gql } = require('apollo-server-express');
 
 const AuthTypeDefs = gql`
  
+
+    extend type Query {
+        usuario: Usuario
+    }
+
+    type Usuario{
+        nombre: String,
+        apellido: String,
+        password: String,
+        email: String,
+        active: Boolean,
+        role: String,
+    }
+
     type Token {
         ok: Boolean,
         status: Int

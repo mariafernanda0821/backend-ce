@@ -1,7 +1,6 @@
 const {
     start,
     httpServer,
-    //httpsServer
 } = require("./app");
 
 const { SERVER } = require('./config');
@@ -13,12 +12,6 @@ const PORTHTPPS = SERVER.PORTHTPPS || 4001;
 const server = async () => {
     
     await start();
-
-    // httpsServer.listen(PORTHTPPS, () => {
-
-    //     console.log(`API server htpps started at port ${PORTHTPPS}`);
-
-    // })
 
     httpServer.listen(PORT, () => {
 

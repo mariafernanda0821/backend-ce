@@ -173,10 +173,43 @@ const RegistrarAdmin = async (parent, args, context, info) => {
     }
 }
 
+const Usuario = async (parent, args, context, info) => {
+ 
+    try {
 
+        const token = context?.authorization;
+
+        if (!token) {
+
+            throw new Error('NOT_AUTHORIZED-Token invalido.');
+
+        }
+
+        const userId = await searchValuejwtUser(token);
+
+        const user = await User.findById(userId._id);
+        
+        return ({
+            ok: true,
+            user,
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        const { message, extensions } = catchError(error);
+
+        throw new GraphQLError(message, {
+            extensions
+        });
+
+    }
+}
 
 module.exports = {
     Registrar,
     Login,
     RegistrarAdmin,
+    Usuario,
 }

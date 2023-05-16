@@ -11,8 +11,6 @@ const {
     ApolloServerPluginLandingPageProductionDefault 
 } = require('@apollo/server/plugin/landingPage/default');
 
-//const { startStandaloneServer } = require('@apollo/server/standalone');
-
 const fileUpload = require('express-fileupload');
 
 const bodyParser = require('body-parser');
@@ -39,12 +37,7 @@ const { SERVER } = require('./config');
 
 const { CODIGO } = require('./helpers/catchError');
 
-//const fs = require('fs');
-
-//const https = require('https');
-
 const app = express();
-
 
 const httpServer = require('http').createServer(app);
 
@@ -64,11 +57,11 @@ const start = async () => {
             resolvers,
             plugins: plugins, //[ApolloServerPluginDrainHttpServer({ httpServer: httpsServer })],
             context: ({ req, res }) => ({ req, res, authorization: req.headers.authorization }),
-            //middlewares: [isAuthenticated],
             cache: new InMemoryLRUCache(),
             //cors({ origin: [`http://localhost:${SERVER.PORT}`, `https://65.21.48.110:${SERVER.PORTHTPPS}`, `https://65.21.48.110:${SERVER.PORT}`, 'https://studio.apollographql.com'] }),
         });
 
+        app.use(cors());
         await apolloServer.start();
 
         apolloServer.applyMiddleware({
