@@ -57,7 +57,7 @@ const searchValuejwtUser = async (token) => {
             resolve({ id: searchUser._id.toString() });
 
         } catch (error) {
-
+            
             reject(new Error('NOT_AUTHORIZED-User not authorized, User does not exist.'));
         }
 

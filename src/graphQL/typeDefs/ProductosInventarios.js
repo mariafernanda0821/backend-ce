@@ -1,5 +1,4 @@
-const { gql } = require('apollo-server-express');
-
+const { gql } = require("apollo-server-express");
 
 const ProductosInventariosTypeDefs = gql`
 
@@ -8,9 +7,34 @@ const ProductosInventariosTypeDefs = gql`
         buscarProductos(tipo:String, page:Int, numItem: Int): ArrayProductos,
 
         listarCarritoCompra: ListarCarrito,
-    
+        buscarTodosLosInventarios: ArrayInventario
+        buscarTodosLosInventariosYProductos(inventarioRegistroId:String): InventarioRegistroProductos
     }
 
+    type ArrayInventario {
+        inventarioRegistro: [InventarioRegistro]
+    }
+
+    type InventarioRegistroProductos {
+       
+        inventarioRegistro:InventarioRegistro
+        inventarioProducto:[InventarioProductoAB]
+    }
+
+    type InventarioProductoAB{
+        productoId: Producto,
+        cantidadDisponible: Int,
+        cantidadVentida: Int,
+        costoIndividual: Int,
+        cantodadInicial: Int
+    }
+    type InventarioRegistro {
+        _id: String, 
+        nombre:  String, 
+        fecha:  String, 
+        numProducts: Int
+        responsable: Usuario
+    }
     type ListarCarrito {
         _id: String,
         productoId:[String],
@@ -23,6 +47,7 @@ const ProductosInventariosTypeDefs = gql`
         cantidadDisponible: Int,
         cantidadVentida: Int,
         costoIndividual: Int,
+        cantodadInicial: Int,
     }
     type ArrayProductos {
         productos:[ProductoData]
@@ -53,6 +78,15 @@ const ProductosInventariosTypeDefs = gql`
         message: String,
 
     }
+
+    type Usuario{
+        nombre: String,
+        apellido: String,
+        password: String,
+        email: String,
+        active: Boolean,
+        role: String,
+    }
     
     type Mutation{ 
 
@@ -68,6 +102,5 @@ const ProductosInventariosTypeDefs = gql`
 
     }
 `;
-
 
 module.exports = ProductosInventariosTypeDefs;

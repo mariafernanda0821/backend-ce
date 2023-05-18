@@ -2,7 +2,7 @@ const { SERVER } = require('../config');
 
 const { GraphQLError } = require('graphql');
 
-const { generarJWT } = require('../helpers/generar-jwt');
+const { generarJWT, searchValuejwtUser } = require('../helpers/generar-jwt');
 
 const { catchError} = require('../helpers/catchError');
 
@@ -75,6 +75,8 @@ const Login = async (parent, args, context, info) => {
     try {
 
         const { email, password } = args;
+        
+        console.log({ email, password });
 
         const searchUser = await User.findOne({ email: email });
 
@@ -92,7 +94,7 @@ const Login = async (parent, args, context, info) => {
         if (!comparePassword) throw new Error("ERROR_DATA-Contrasena incorrecta");
 
         const { token } = await generarJWT({ id: searchUser._id.toString() });
-
+        console.log(token) 
         return {
             ok: true,
             token,
@@ -141,6 +143,7 @@ const RegistrarAdmin = async (parent, args, context, info) => {
             apellido, 
             password:hash, 
             email,
+            role:'admin'
         };
 
         await new User(newObjectUser).save();
@@ -187,12 +190,12 @@ const Usuario = async (parent, args, context, info) => {
 
         const userId = await searchValuejwtUser(token);
 
-        const user = await User.findById(userId._id);
+        console.log("userId userId", userId);
+
+        const user = await User.findById(userId?.id);
         
-        return ({
-            ok: true,
-            user,
-        });
+        console.log(user);
+        return (user);
 
     } catch (error) {
 

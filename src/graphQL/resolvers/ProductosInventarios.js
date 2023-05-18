@@ -2,6 +2,8 @@ const { gql } = require('apollo-server-express');
 const {
     AgregarRegistrodeInventario,
     AgregarProductos,
+    BuscarTodosLosInventarios,
+    BuscarTodosLosInventariosYProductos
 } = require('../../controllers/inventario');
 const {
     AgregarCarrito,
@@ -19,6 +21,11 @@ const ProductosInventariosResolver ={
         buscarProductos: (parent, args, context, info) => ListarProductos(parent, args, context, info),  
         
         listarCarritoCompra: (parent, args, context, info) => ListarCarritoCompra(parent, args, context, info),
+   
+        //inventarios
+        buscarTodosLosInventarios : (parent, args, context, info) => BuscarTodosLosInventarios (parent, args, context, info),
+        buscarTodosLosInventariosYProductos : (parent, args, context, info) => BuscarTodosLosInventariosYProductos (parent, args, context, info),
+        
     },
 
     Mutation: {
