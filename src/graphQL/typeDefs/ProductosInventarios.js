@@ -101,6 +101,24 @@ const ProductosInventariosTypeDefs = gql`
         active: Boolean
         role: String
     }
+    input MetodoPago{
+        tipo: String,
+        metodoPago:{
+            numeroTarjeta: String,
+            nombreTarjeta: String,
+            cvc: String,
+            criptomoneda: String,
+        }
+    }
+    input Compra {
+        cantidad:Int
+        inventarioProductoId: String
+        precio: Int
+    }
+    
+    input ListaCompra{
+        compra: [Compra]
+    }
 
     type Mutation {
         agregarProductos(codigo: String!): Respuesta
@@ -112,9 +130,9 @@ const ProductosInventariosTypeDefs = gql`
         quitarProductoCarrito(productoId: String!): Respuesta
 
         agregarUnProcesoDeCompra(
-            compra: String!
-            metodoPago: String!
-            montoTotal: String!
+            compra: [Compra!]
+            metodoPago: MetodoPago!
+            montoTotal: Int!
         ): Respuesta
     }
 `;

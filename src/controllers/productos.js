@@ -298,7 +298,7 @@ const ListarCarritoCompra = async (parent, args, context, info) => {
             },
             {
                 $sort: {
-                    productoId: 1,
+                    "productos.nombre": 1,
                 },
             },
         ]);
@@ -332,17 +332,71 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
 
         const { compra, metodoPago, montoTotal } = args;
 
-        await new ProcesoCompra({
-            compra: compra,
-            metodoPago: metodoPago,
-            montoTotal: montoTotal,
-        }).save();
+        const {tipo } = metodoPago;
+
+        if(tipo ==="criptomenda"){
+            const {criptomeneda} = metodoPago;
+            await new ProcesoCompra({
+                compra: compra,
+                metodoPago: {
+                    tipo: tipo,
+                    dato: {
+                        criptomeneda: criptomeneda,
+                        fecha: new Date()
+                    }
+                },
+                montoTotal: montoTotal,
+            }).save();
+
+        }
+        if(tipo ==="tarjetaCredito"){
+            const { numeroTarjeta, nombreTarjeta, cvc} = metodoPago;
+
+            await new ProcesoCompra({
+                compra: compra,
+                metodoPago: {
+                    tipo: tipo,
+                    dato:{
+                        numeroTarjeta, 
+                        nombreTarjeta, 
+                        cvc  ,
+                        fecha: new Date()
+                    }
+                },
+                montoTotal: montoTotal,
+            }).save();
+
+        }
 
         return {
             ok: true,
             message: "Se esta procesando la Compra",
         };
     } catch (error) {
+        console.log(error);
+
+        const { message, extensions } = catchError(error);
+
+        throw new GraphQLError(message, {
+            extensions,
+        });
+    }
+};
+
+const ListadoProcesosCompra = async (parent, args, context, info) => {
+    try {
+        
+        const token = context.authorization;
+        
+        const {proceso } = args;
+
+        return {
+            ok: true,
+            listaProcesosCompra: [],
+        };
+
+    } catch (error) {
+        
         console.log(error);
 
         const { message, extensions } = catchError(error);
@@ -360,4 +414,5 @@ module.exports = {
     ListarProductos,
     ListarCarritoCompra,
     ProcesoDeCompra,
+    ListadoProcesosCompra
 };
