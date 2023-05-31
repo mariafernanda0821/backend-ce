@@ -19,18 +19,18 @@ const schema = mongoose.Schema({
             }
         }
     ],
+    
     metodoPago: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'MetodoPago',
+        tipo:{
+            type: String,
+        },
+        
     },
     
     status: {
-        type: String
-    },
-
-    delete: {
-       type: Boolean,
-       default: false
+        type: String,
+        enum: ['proceso', 'finalizada', 'rechazada'],
+        default: 'proceso'
     },
 
     montoTotal: {

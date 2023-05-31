@@ -3,11 +3,13 @@ const {
     Login,
     RegistrarAdmin,
     Usuario,
+    UsuariosApp,
 } = require('../../controllers/auth');
 
 const AuthUserResolver = {
     Query :{
         usuario: (parent, args, context, info) => Usuario(parent, args, context, info),
+        usuariosClientes: (parent, args, context, info) => UsuariosApp(parent, args, context, info),
     },
 
     Mutation: {

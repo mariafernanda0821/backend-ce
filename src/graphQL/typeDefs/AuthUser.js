@@ -6,8 +6,13 @@ const AuthTypeDefs = gql`
 
     extend type Query {
         usuario: Usuario
+        usuariosClientes: RespuestaUsuarios
     }
 
+
+    type RespuestaUsuarios{
+        usuarios: [Usuario]
+    }
     type Usuario{
         nombre: String,
         apellido: String,

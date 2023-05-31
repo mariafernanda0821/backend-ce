@@ -259,10 +259,77 @@ const BuscarTodosLosInventariosYProductos = async (parent, args, context, info) 
 
     }
 }
+
+
+const BuscarLosProductosDeLosInventarios = async (parent, args, context, info) =>{
+  try {
+      
+      const {productoId}= args;
+
+      const token = context?.authorization;
+
+      if (!token) {
+
+          throw new Error('NOT_AUTHORIZED-Token invalido.');
+
+      }
+
+      //const userId = await searchValuejwtUser(token);
+
+      const inventarioRegistro = await InventarioProductos.aggregate([
+        {
+          '$match': {
+            'productoId': mongoose.Types.ObjectId(productoId)
+          }
+        }, {
+          '$lookup': {
+            'from': 'productos', 
+            'localField': 'productoId', 
+            'foreignField': '_id', 
+            'as': 'productoId'
+          }
+        }, {
+          '$unwind': {
+            'path': '$productoId', 
+            'preserveNullAndEmptyArrays': true
+          }
+        }, {
+          '$lookup': {
+            'from': 'inventarioregistros', 
+            'localField': 'inventarioRegistroId', 
+            'foreignField': '_id', 
+            'as': 'inventarioRegistroId'
+          }
+        }, {
+          '$unwind': {
+            'path': '$inventarioRegistroId', 
+            'preserveNullAndEmptyArrays': true
+          }
+        }
+      ]
+      )
+
+      return({
+          inventarioRegistro: inventarioRegistro,
+      });
+
+  } catch (error) {
+
+      console.log(error);
+
+      const { message, extensions } = catchError(error);
+
+      throw new GraphQLError(message, {
+          extensions
+      });
+
+  }
+}
+
 module.exports = {
     AgregarRegistrodeInventario,
     AgregarProductos,
     BuscarTodosLosInventarios,
     BuscarTodosLosInventariosYProductos,
-  
+    BuscarLosProductosDeLosInventarios,
 }

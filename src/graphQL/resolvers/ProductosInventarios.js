@@ -3,7 +3,8 @@ const {
     AgregarRegistrodeInventario,
     AgregarProductos,
     BuscarTodosLosInventarios,
-    BuscarTodosLosInventariosYProductos
+    BuscarTodosLosInventariosYProductos,
+    BuscarLosProductosDeLosInventarios
 } = require('../../controllers/inventario');
 const {
     AgregarCarrito,
@@ -24,8 +25,12 @@ const ProductosInventariosResolver ={
    
         //inventarios
         buscarTodosLosInventarios : (parent, args, context, info) => BuscarTodosLosInventarios (parent, args, context, info),
+        
         buscarTodosLosInventariosYProductos : (parent, args, context, info) => BuscarTodosLosInventariosYProductos (parent, args, context, info),
         
+        buscarLosProductosDeLosInventarios : (parent, args, context, info) => BuscarLosProductosDeLosInventarios (parent, args, context, info),
+
+
     },
 
     Mutation: {

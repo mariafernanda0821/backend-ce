@@ -36,6 +36,33 @@ const User = async (parent, args, context, info) => {
 }
 
 
+const UserApp = async (parent, args, context, info) => {
+    try {
+
+        const token = context?.authorization;
+
+        const userId = await searchValuejwtUser(token);
+
+        const users = await User.find({role: 'userApp'});
+        
+        return {
+            usuarios: users,
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+        const { message, extensions } = catchError(error);
+
+        throw new GraphQLError(message, {
+            extensions
+        });
+
+    }
+}
+
 module.exports = {
     User,
+    UserApp
 }
