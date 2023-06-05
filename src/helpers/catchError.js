@@ -10,7 +10,7 @@ const catchError = (error) => {
         if (error.errors) {
 
             for (const errs in error.errors) {
-                message += `${error.errors[errs].message}.`;
+                message += `${error.errors[errs].message}. `;
                 break;
             }
 

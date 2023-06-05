@@ -46,7 +46,7 @@ const searchValuejwtUser = async (token) => {
 
             const userId = jwt.verify(token, SERVER.SECRETOR_PRIVATE_KEY);
 
-            const searchUser = await User.findById(userId.id);
+            const searchUser = await User.findById(userId?.id);
 
             if (!searchUser) {
                 

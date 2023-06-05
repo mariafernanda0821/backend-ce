@@ -53,18 +53,20 @@ const ProductosInventariosTypeDefs = gql`
         responsable: Usuario
     }
     type ListarCarrito {
-        _id: String
-        productoId: [String]
-        productos: [Producto]
-        inventarioproductos: [Inventarioproductos]
+        _id: String,
+        productoId: [String],
+        productos: [Producto],
+        inventarioproductos: [Inventarioproductos],
     }
 
     type Inventarioproductos {
-        productoId: String
-        cantidadDisponible: Int
-        cantidadVentida: Int
-        costoIndividual: Int
-        cantodadInicial: Int
+        _id:String,
+        productoId: String,
+        inventarioRegistroId:String,
+        cantidadDisponible: Int,
+        cantidadVentida: Int,
+        costoIndividual: Int,
+        cantodadInicial: Int,
     }
     type ArrayProductos {
         productos: [ProductoData]
@@ -101,19 +103,25 @@ const ProductosInventariosTypeDefs = gql`
         active: Boolean
         role: String
     }
-    input MetodoPago{
-        tipo: String,
-        metodoPago:{
-            numeroTarjeta: String,
-            nombreTarjeta: String,
-            cvc: String,
-            criptomoneda: String,
-        }
+
+
+    input DetallarPago {
+        tarjeta: String,
+        nombre: String,
+        cvc: String,
+        criptomoneda: String,
+        fechaVencimiento: String,
     }
+
+    input MetodoPago {
+        tipo: String,
+        datos:DetallarPago
+    }
+    
     input Compra {
-        cantidad:Int
-        inventarioProductoId: String
-        precio: Int
+        cantidad:Int,
+        inventarioProductoId: String,
+        precio: Int,
     }
     
     input ListaCompra{
@@ -121,13 +129,14 @@ const ProductosInventariosTypeDefs = gql`
     }
 
     type Mutation {
-        agregarProductos(codigo: String!): Respuesta
 
-        agregarRegistrodeInventario(codigo: String!): Respuesta
+        agregarProductos(codigo: String!): Respuesta,
 
-        agregarProductoCarrito(arrayProductoId: String!): Respuesta
+        agregarRegistrodeInventario(codigo: String!): Respuesta,
 
-        quitarProductoCarrito(productoId: String!): Respuesta
+        agregarProductoCarrito(arrayProductoId: String!): Respuesta,
+
+        quitarProductoCarrito(productoId: String!): Respuesta,
 
         agregarUnProcesoDeCompra(
             compra: [Compra!]

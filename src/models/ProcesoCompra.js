@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 
 const schema = mongoose.Schema({
     
-    UserId: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserId',
+        ref: 'User',
+        required:[true, "Se requiere el usario de la compra."]
     },
 
     compra:[
@@ -24,6 +25,14 @@ const schema = mongoose.Schema({
         tipo:{
             type: String,
         },
+        dato: {
+            tarjeta: {type: String},
+            nombre: {type: String},
+            cvc: {type: String},
+            fecha:{type: Date},
+            fechaVencimiento: {type: String},
+            criptomoneda: {type: String},
+        }
         
     },
     

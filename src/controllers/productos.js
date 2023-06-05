@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const Carrito = require("../models/Carrito");
 const ProcesoCompra = require("../models/ProcesoCompra");
 const { searchValuejwtUser } = require("../helpers/generar-jwt");
+
+const { catchError} = require('../helpers/catchError');
 const InventarioProductos = require("../models/InventarioProductos");
+const bcrypt = require('bcryptjs');
 
 const ListarProductos = async (parent, args, context, info) => {
     try {
@@ -126,6 +129,7 @@ const AgregarCarrito = async (parent, args, context, info) => {
         const token = context.authorization;
 
         console.log("token token", token);
+
         if (!token) {
             throw new Error("NOT_AUTHORIZED-Token invalido.");
         }
@@ -309,6 +313,7 @@ const ListarCarritoCompra = async (parent, args, context, info) => {
 
         //console.log(carrito)
         return carrito;
+        
     } catch (error) {
         console.log(error);
 
@@ -332,38 +337,66 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
 
         const { compra, metodoPago, montoTotal } = args;
 
-        const {tipo } = metodoPago;
+        console.log("{ compra, metodoPago, montoTotal }", { compra, metodoPago, montoTotal });
+        const {tipo ,} = metodoPago;
 
-        if(tipo ==="criptomenda"){
-            const {criptomeneda} = metodoPago;
+        if(tipo ==="criptomoneda"){
+            
+            const {criptomoneda} = metodoPago?.datos;
+
             await new ProcesoCompra({
                 compra: compra,
                 metodoPago: {
                     tipo: tipo,
                     dato: {
-                        criptomeneda: criptomeneda,
+                        criptomoneda: criptomoneda,
                         fecha: new Date()
                     }
                 },
                 montoTotal: montoTotal,
+                userId: userId.id
             }).save();
 
         }
         if(tipo ==="tarjetaCredito"){
-            const { numeroTarjeta, nombreTarjeta, cvc} = metodoPago;
 
+            const { tarjeta, nombre, cvc, fechaVencimiento} = metodoPago?.datos;
+            
+            console.log("metodoPago", metodoPago);
+
+            const salt = bcrypt.genSaltSync(10);
+
+            hashCvc = bcrypt.hashSync(cvc, salt);
+
+            console.log({
+                compra: compra,
+                metodoPago: {
+                    tipo: tipo,
+                    dato:{
+                        tarjeta: tarjeta, 
+                        nombre: nombre, 
+                        cvc:  hashCvc ,
+                        fecha: new Date(),
+                        fechaVencimiento: fechaVencimiento
+                    }
+                },
+                montoTotal: montoTotal,
+                userId: userId._id
+            })
             await new ProcesoCompra({
                 compra: compra,
                 metodoPago: {
                     tipo: tipo,
                     dato:{
-                        numeroTarjeta, 
-                        nombreTarjeta, 
-                        cvc  ,
-                        fecha: new Date()
+                        tarjeta: tarjeta, 
+                        nombre: nombre, 
+                        cvc:  hashCvc ,
+                        fecha: new Date(),
+                        fechaVencimiento: fechaVencimiento
                     }
                 },
                 montoTotal: montoTotal,
+                userId: userId.id
             }).save();
 
         }
@@ -372,10 +405,14 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
             ok: true,
             message: "Se esta procesando la Compra",
         };
+
     } catch (error) {
-        console.log(error);
+       // console.log(error);
 
         const { message, extensions } = catchError(error);
+
+        console.log({ message, extensions });
+
 
         throw new GraphQLError(message, {
             extensions,
