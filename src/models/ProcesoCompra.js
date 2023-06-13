@@ -46,9 +46,8 @@ const schema = mongoose.Schema({
         type: Number
     },
 
-    procesoBanco: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProcesoBanco',
+    referenciaBanco: {
+       type: String
     }
 }, {
 

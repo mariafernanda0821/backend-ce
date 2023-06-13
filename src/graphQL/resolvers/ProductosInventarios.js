@@ -13,7 +13,7 @@ const {
     ListarProductos,
     ListarCarritoCompra,
     ProcesoDeCompra,
-
+    ListadoProcesosCompra
 } = require('../../controllers/productos');
 
 
@@ -32,6 +32,8 @@ const ProductosInventariosResolver ={
         
         buscarLosProductosDeLosInventarios : (parent, args, context, info) => BuscarLosProductosDeLosInventarios (parent, args, context, info),
         
+        buscarProcesoCompra: (parent, args, context, info) => ListadoProcesosCompra (parent, args, context, info),
+      
         //agregarUnProcesoDeCompra: (parent, args, context, info) => ProcesoDeCompra (parent, args, context, info),
 
 

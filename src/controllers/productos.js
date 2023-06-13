@@ -3,9 +3,45 @@ const Carrito = require("../models/Carrito");
 const ProcesoCompra = require("../models/ProcesoCompra");
 const { searchValuejwtUser } = require("../helpers/generar-jwt");
 
-const { catchError} = require('../helpers/catchError');
+const { catchError } = require("../helpers/catchError");
 const InventarioProductos = require("../models/InventarioProductos");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
+
+const axios = require("axios");
+
+const TOKENEGOCIO = "5i3.UZ2d7QTsTz0BNV1ZO";
+
+const peticionDelProcesoBanco = (tipo, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (tipo === "tarjetaCredito") {
+                const respuesta = await axios.post(
+                    "https://cryptobanco.jsmb.lat/api/pay-with-tdc",
+                    data
+                );
+                resolve(respuesta);
+                console.log("respuestaPeticion respuestaPeticion", respuesta);
+            }
+
+            if (tipo === "criptomoneda") {
+                const respuesta = await axios.post(
+                    "https://cryptobanco.jsmb.lat/api/pay-with-cripto",
+                    data
+                );
+                resolve(respuesta);
+                console.log("respuestaPeticion respuestaPeticion", respuesta);
+            }
+        } catch (error) {
+            reject("ERROR_DATA-Ocurrio un error en el metodo de pago.");
+        }
+
+        // if(/* petición exitosa */) {
+        //   resolve();
+        // } else {
+        //   reject("ERROR_DATA-Ocurrio un error en el metodo de pago.");
+        // }
+    });
+};
 
 const ListarProductos = async (parent, args, context, info) => {
     try {
@@ -130,6 +166,8 @@ const AgregarCarrito = async (parent, args, context, info) => {
 
         console.log("token token", token);
 
+        console.log("token token arrayProductoId", arrayProductoId);
+
         if (!token) {
             throw new Error("NOT_AUTHORIZED-Token invalido.");
         }
@@ -140,6 +178,8 @@ const AgregarCarrito = async (parent, args, context, info) => {
             arrayProductoId === "" ? [] : arrayProductoId.split(",");
 
         const searchCarrito = await Carrito.findOne({ userId: userId?.id });
+
+        console.log("token token arrayProductos", arrayProductos);
 
         const menssaje =
             arrayProductos.length > 2
@@ -164,10 +204,11 @@ const AgregarCarrito = async (parent, args, context, info) => {
         );
 
         const filterArray = newArray.filter(
-            (x) => x != arrayProductos[0].toString()
+            (x) => x != arrayProductos[0]?.toString()
         );
 
         const x = filterArray.concat(arrayProductos);
+        console.log("token token arrayProductos x", x);
 
         await Carrito.findByIdAndUpdate(searchCarrito?._id, { productoId: x });
 
@@ -196,10 +237,9 @@ const QuitarProductoCarrito = async (parent, args, context, info) => {
         if (!token) {
             throw new Error("NOT_AUTHORIZED-Token invalido.");
         }
+        console.log("productoId productoId", productoId);
 
         const userId = await searchValuejwtUser(token);
-
-        //const arrayProductos = productos === "" ? [] : productos.split(",");
 
         const searchCarrito = await Carrito.findOne({ userId: userId?.id });
 
@@ -217,11 +257,15 @@ const QuitarProductoCarrito = async (parent, args, context, info) => {
         //     item.toString() != productoId.toString()
         // }
         // ));
+        console.log("prodictos", productoId);
+
         const newArray = await Promise.all(
-            searchCarrito?.productoId?.map(async (item) => item.toString())
+            searchCarrito?.productoId?.map(async (item) => item?.toString())
         );
 
         const filterArray = newArray.filter((x) => x != productoId);
+
+        console.log("filterArray", filterArray);
 
         await Carrito.findByIdAndUpdate(searchCarrito?._id, {
             productoId: filterArray,
@@ -313,7 +357,6 @@ const ListarCarritoCompra = async (parent, args, context, info) => {
 
         //console.log(carrito)
         return carrito;
-        
     } catch (error) {
         console.log(error);
 
@@ -334,85 +377,175 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
         }
 
         const userId = await searchValuejwtUser(token);
+        console.log("userId userId", userId);
+        if (!userId?.id)
+            throw new Error("NOT_AUTHORIZED-Usuario No autorizado.");
 
         const { compra, metodoPago, montoTotal } = args;
 
-        console.log("{ compra, metodoPago, montoTotal }", { compra, metodoPago, montoTotal });
-        const {tipo ,} = metodoPago;
+        if (!metodoPago?.datos?.tarjeta && !metodoPago?.datos?.criptomoneda) {
+            throw new Error("ERROR_DATA- Se requieren todo la informacion.");
+        }
 
-        if(tipo ==="criptomoneda"){
-            
-            const {criptomoneda} = metodoPago?.datos;
+        console.log("{ compra, metodoPago, montoTotal }", {
+            compra,
+            metodoPago,
+            montoTotal,
+        });
 
-            await new ProcesoCompra({
+        const { tipo } = metodoPago;
+
+        let respuestaPeticion = "";
+        let procesoCompra = "";
+        if (tipo === "criptomoneda") {
+            const { criptomoneda } = metodoPago?.datos;
+
+            procesoCompra = await new ProcesoCompra({
                 compra: compra,
                 metodoPago: {
                     tipo: tipo,
                     dato: {
                         criptomoneda: criptomoneda,
-                        fecha: new Date()
-                    }
+                        fecha: new Date(),
+                    },
                 },
                 montoTotal: montoTotal,
-                userId: userId.id
+                userId: userId.id,
             }).save();
 
+            const dataCriptomoneda = {
+                correo: criptomoneda,
+                pin: "1234",
+                monto: montoTotal,
+                token: TOKENEGOCIO,
+            };
+            respuestaPeticion = await peticionDelProcesoBanco(
+                tipo,
+                dataCriptomoneda
+            );
         }
-        if(tipo ==="tarjetaCredito"){
 
-            const { tarjeta, nombre, cvc, fechaVencimiento} = metodoPago?.datos;
-            
-            console.log("metodoPago", metodoPago);
+        if (tipo === "tarjetaCredito") {
+            const { tarjeta, nombre, cvc, fechaVencimiento } =
+                metodoPago?.datos;
 
-            const salt = bcrypt.genSaltSync(10);
+            const regex = /^(0[1-9]|1[0-2])\/\d{2}$/;
 
-            hashCvc = bcrypt.hashSync(cvc, salt);
+            if (regex.test(fechaVencimiento)) {
+                const salt = bcrypt.genSaltSync(10);
 
-            console.log({
-                compra: compra,
-                metodoPago: {
-                    tipo: tipo,
-                    dato:{
-                        tarjeta: tarjeta, 
-                        nombre: nombre, 
-                        cvc:  hashCvc ,
-                        fecha: new Date(),
-                        fechaVencimiento: fechaVencimiento
-                    }
-                },
-                montoTotal: montoTotal,
-                userId: userId._id
+                hashCvc = bcrypt.hashSync(cvc, salt);
+
+                procesoCompra = await new ProcesoCompra({
+                    compra: compra,
+                    metodoPago: {
+                        tipo: tipo,
+                        dato: {
+                            tarjeta: tarjeta,
+                            nombre: nombre,
+                            cvc: hashCvc,
+                            fecha: new Date(),
+                            fechaVencimiento: fechaVencimiento,
+                        },
+                    },
+                    montoTotal: montoTotal,
+                    userId: userId.id,
+                }).save();
+
+                const dataTarjetaCredito = {
+                    tarjeta: tarjeta,
+                    cvv: cvc,
+                    fecha: fechaVencimiento,
+                    monto: 5,
+                    token: TOKENEGOCIO,
+                };
+                respuestaPeticion = await peticionDelProcesoBanco(
+                    tipo,
+                    dataTarjetaCredito
+                );
+            }
+        }
+
+        if (!respuestaPeticion.ok) {
+            await ProcesoCompra.findByIdAndUpdate(procesoCompra._id, {
+                status: "rechazada",
+            });
+
+            return {
+                ok: false,
+                message: "La compra fue rechazada.",
+            };
+        }
+
+        //     await ProcesoCompra.findByIdAndUpdate(procesoCompra._id, {
+        //         status: 'finalizada',
+        //         referenciaBanco: respuestaPeticion?.txt?.hash
+
+        //     });
+
+        const newArray = compra.map((item) => item?.inventarioProductoId);
+
+        const newArrayInventarioProducto = await InventarioProductos.find(
+            { _id: { $in: newArray } },
+            { productoId: 1, _id: 0 }
+        );
+
+        const productoEliminar = await Promise.all(
+            newArrayInventarioProducto.map(async (item) => {
+                const productoId = item?.productoId;
+                console.log("productoId productoId", productoId);
+                if (productoId) return productoId.toString();
             })
-            await new ProcesoCompra({
-                compra: compra,
-                metodoPago: {
-                    tipo: tipo,
-                    dato:{
-                        tarjeta: tarjeta, 
-                        nombre: nombre, 
-                        cvc:  hashCvc ,
-                        fecha: new Date(),
-                        fechaVencimiento: fechaVencimiento
-                    }
-                },
-                montoTotal: montoTotal,
-                userId: userId.id
-            }).save();
+        );
 
-        }
+        const searchCarrito = await Carrito.findOne({ userId: userId?.id });
+
+        const filterArray = searchCarrito?.productoId?.filter(
+            (x) => !productoEliminar.includes(x.toString())
+        );
+
+        await Carrito.findByIdAndUpdate(searchCarrito?._id, {
+            productoId: filterArray,
+        });
+        /* 
+        compra: [
+            {
+            cantidad: 4,
+            inventarioProductoId: '6449b104025694ca8591349f',
+            precio: 5
+            }
+        ],*/
+        const x = await Promise.all(
+            compra.map(async (item) => {
+                const inventario = await InventarioProductos.findById(
+                    item?.inventarioProductoId
+                );
+
+                const cantidad = inventario?.cantidadVentida + item?.cantidad;
+
+                const actualizar = {
+                    cantidadVentida: cantidad,
+                    cantidadDisponible: inventario.cantodadInicial - cantidad,
+                };
+
+                await InventarioProductos.findByIdAndUpdate(
+                    item?.inventarioProductoId,
+                    actualizar
+                );
+            })
+        );
 
         return {
             ok: true,
             message: "Se esta procesando la Compra",
         };
-
+        
     } catch (error) {
-       // console.log(error);
+        // console.log(error);
 
         const { message, extensions } = catchError(error);
 
         console.log({ message, extensions });
-
 
         throw new GraphQLError(message, {
             extensions,
@@ -422,18 +555,69 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
 
 const ListadoProcesosCompra = async (parent, args, context, info) => {
     try {
-        
-        const token = context.authorization;
-        
-        const {proceso } = args;
+        const token = context?.authorization;
 
+        if (!token) {
+            throw new Error("NOT_AUTHORIZED-Token invalido.");
+        }
+
+        const userId = await searchValuejwtUser(token);
+        console.log("userId userId", userId);
+
+        if (!userId?.id)
+            throw new Error("NOT_AUTHORIZED-Usuario No autorizado.");
+
+        const procesoDeCompra = await ProcesoCompra.find({
+            userId: userId?._id,
+        });
+
+        const newInventarioProductos = await Promise.all(
+            procesoDeCompra.map(async (item) => {
+                const productoId = item.compra.map(
+                    (item) => item.inventarioProductoId
+                );
+
+                const newInventarioProductos =
+                    await InventarioProductos.aggregate([
+                        {
+                            $match: {
+                                _id: {
+                                    $in: productoId,
+                                },
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: "productos",
+                                localField: "productoId",
+                                foreignField: "_id",
+                                as: "productoId",
+                            },
+                        },
+                        {
+                            $unwind: {
+                                path: "$productoId",
+                                preserveNullAndEmptyArrays: true,
+                            },
+                        },
+                    ]);
+
+                return {
+                    item,
+                    inventarioProductos: newInventarioProductos,
+                };
+            })
+        );
+
+        console.log(
+            "newInventarioProductos newInventarioProductos",
+            newInventarioProductos
+        );
         return {
             ok: true,
-            listaProcesosCompra: [],
+            listaProcesosCompra: newInventarioProductos,
         };
-
     } catch (error) {
-        
         console.log(error);
 
         const { message, extensions } = catchError(error);
@@ -451,5 +635,5 @@ module.exports = {
     ListarProductos,
     ListarCarritoCompra,
     ProcesoDeCompra,
-    ListadoProcesosCompra
+    ListadoProcesosCompra,
 };

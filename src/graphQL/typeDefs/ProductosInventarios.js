@@ -13,7 +13,32 @@ const ProductosInventariosTypeDefs = gql`
         buscarLosProductosDeLosInventarios(
             productoId: String
         ): InventarioDeProductos
+
+        buscarProcesoCompra: RespuestaProcesoCompra
     }
+
+    type RespuestaProcesoCompra{
+        _id: String,
+        status: String,
+        montoTotal: String,
+        metodoPago: MetodoPago01,
+        inventarioProductos:ArrayInventarioDeProductos,
+    }
+
+
+    type DetallarPago01 {
+        tarjeta: String,
+        nombre: String,
+        cvc: String,
+        criptomoneda: String,
+        fechaVencimiento: String,
+    }
+
+    type MetodoPago01 {
+        tipo: String,
+        datos:DetallarPago01
+    }
+    
 
     type InventarioDeProductos {
         inventarioRegistro: [ArrayInventarioDeProductos]
