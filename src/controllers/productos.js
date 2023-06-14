@@ -9,7 +9,33 @@ const bcrypt = require("bcryptjs");
 
 const axios = require("axios");
 
-const TOKENEGOCIO = "5i3.UZ2d7QTsTz0BNV1ZO";
+
+/* 
+cliente
+tarjeta: 42429811763194904
+fecha:04/26
+cvv:148
+
+criptomoneda:
+pin 2716826
+Address: 0xaac008bAc79D2286014aF491bF5e55db7A00a379
+Llave privada: 0xa27d8e7a1488c6657649c4b8651f88c4910798810cbcb82d71ccfdd53ab04bd6
+
+Empresa: 
+api token rexKm9gVYV9XfZXPxV0VO
+
+tarjeta 42422672851483000
+fecha: 04/26
+cvv: 965
+
+criptomoneda:
+pin 4622108
+llave privada:0xdefe9203e25a22a746271bee0ab080dcfb98201a25069f637548f68e1f961f22
+Address:0x78Aa9a4c2f65a39CF7acC3Ca78f9AEC4D1Eee66c
+
+*/
+
+const TOKENEGOCIO = "rexKm9gVYV9XfZXPxV0VO";
 
 const peticionDelProcesoBanco = (tipo, data) => {
     return new Promise(async (resolve, reject) => {
@@ -19,8 +45,11 @@ const peticionDelProcesoBanco = (tipo, data) => {
                     "https://cryptobanco.jsmb.lat/api/pay-with-tdc",
                     data
                 );
-                resolve(respuesta);
+                
                 console.log("respuestaPeticion respuestaPeticion", respuesta);
+                const {ok} = respuesta.data;
+
+                resolve({ok});
             }
 
             if (tipo === "criptomoneda") {
@@ -28,10 +57,15 @@ const peticionDelProcesoBanco = (tipo, data) => {
                     "https://cryptobanco.jsmb.lat/api/pay-with-cripto",
                     data
                 );
-                resolve(respuesta);
                 console.log("respuestaPeticion respuestaPeticion", respuesta);
+
+                const {ok} = respuesta.data;
+                
+                resolve({ok});
+                
             }
         } catch (error) {
+            console.log("error ===========>", error);
             reject("ERROR_DATA-Ocurrio un error en el metodo de pago.");
         }
 
@@ -398,7 +432,7 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
         let respuestaPeticion = "";
         let procesoCompra = "";
         if (tipo === "criptomoneda") {
-            const { criptomoneda } = metodoPago?.datos;
+            const { criptomoneda, pin } = metodoPago?.datos;
 
             procesoCompra = await new ProcesoCompra({
                 compra: compra,
@@ -415,8 +449,8 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
 
             const dataCriptomoneda = {
                 correo: criptomoneda,
-                pin: "1234",
-                monto: montoTotal,
+                pin: pin,
+                monto: montoTotal.toString(),
                 token: TOKENEGOCIO,
             };
             respuestaPeticion = await peticionDelProcesoBanco(
@@ -456,7 +490,7 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
                     tarjeta: tarjeta,
                     cvv: cvc,
                     fecha: fechaVencimiento,
-                    monto: 5,
+                    monto: montoTotal.toString(),
                     token: TOKENEGOCIO,
                 };
                 respuestaPeticion = await peticionDelProcesoBanco(
@@ -477,11 +511,10 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
             };
         }
 
-        //     await ProcesoCompra.findByIdAndUpdate(procesoCompra._id, {
-        //         status: 'finalizada',
-        //         referenciaBanco: respuestaPeticion?.txt?.hash
-
-        //     });
+        console.log("respuestaPeticion respuestaPeticion", respuestaPeticion)
+            await ProcesoCompra.findByIdAndUpdate(procesoCompra._id, {
+                status: 'finalizada',
+            });
 
         const newArray = compra.map((item) => item?.inventarioProductoId);
 
@@ -515,7 +548,7 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
             precio: 5
             }
         ],*/
-        const x = await Promise.all(
+        await Promise.all(
             compra.map(async (item) => {
                 const inventario = await InventarioProductos.findById(
                     item?.inventarioProductoId
@@ -535,6 +568,9 @@ const ProcesoDeCompra = async (parent, args, context, info) => {
             })
         );
 
+
+
+    
         return {
             ok: true,
             message: "Se esta procesando la Compra",
@@ -568,13 +604,14 @@ const ListadoProcesosCompra = async (parent, args, context, info) => {
             throw new Error("NOT_AUTHORIZED-Usuario No autorizado.");
 
         const procesoDeCompra = await ProcesoCompra.find({
-            userId: userId?._id,
+            userId: userId?.id,
         });
+        console.log("procesoDeCompra procesoDeCompra", procesoDeCompra);
 
         const newInventarioProductos = await Promise.all(
             procesoDeCompra.map(async (item) => {
-                const productoId = item.compra.map(
-                    (item) => item.inventarioProductoId
+                const productoId = item?.compra?.map(
+                    (item) => item?.inventarioProductoId
                 );
 
                 const newInventarioProductos =
@@ -613,10 +650,12 @@ const ListadoProcesosCompra = async (parent, args, context, info) => {
             "newInventarioProductos newInventarioProductos",
             newInventarioProductos
         );
-        return {
-            ok: true,
-            listaProcesosCompra: newInventarioProductos,
-        };
+
+        return ({
+            lista: newInventarioProductos,
+         
+        });
+
     } catch (error) {
         console.log(error);
 

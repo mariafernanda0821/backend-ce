@@ -94,6 +94,7 @@ const Login = async (parent, args, context, info) => {
         if (!comparePassword) throw new Error("ERROR_DATA-Contrasena incorrecta");
 
         const { token } = await generarJWT({ id: searchUser._id.toString() });
+        
         console.log(token) 
         return {
             ok: true,

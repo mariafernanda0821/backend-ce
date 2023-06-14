@@ -46,9 +46,9 @@ const schema = mongoose.Schema({
         type: Number
     },
 
-    referenciaBanco: {
-       type: String
-    }
+    // referenciaBanco: {
+    //    type: String
+    // }
 }, {
 
     timestamps: true

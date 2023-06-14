@@ -14,17 +14,46 @@ const ProductosInventariosTypeDefs = gql`
             productoId: String
         ): InventarioDeProductos
 
-        buscarProcesoCompra: RespuestaProcesoCompra
+        buscarProcesoCompra: RespuestaProcesoComprax
+        #listadoProcesosCompra: RespuestaListadoProcesosCompra
     }
 
+    type RespuestaListadoProcesosCompra{
+        metodoPago:MetodoPagoX
+        status: String
+        montoTotal: Int
+        inventarioProductos:InventarioProductoAB
+    }
+
+    type MetodoPagoX{
+        tipo: String,
+        dato: dato
+    }
+   
+    type dato {
+            tarjeta:String,
+            nombre: String,
+            cvc: String,
+            fecha:String,
+            fechaVencimiento: String,
+            criptomoneda: String,
+        }
+
+
+    type RespuestaProcesoComprax{
+        lista:[RespuestaProcesoCompra]
+    }
     type RespuestaProcesoCompra{
+        item:Item,
+        inventarioProductos:[ArrayInventarioDeProductos],
+    }
+
+    type Item{
         _id: String,
         status: String,
         montoTotal: String,
         metodoPago: MetodoPago01,
-        inventarioProductos:ArrayInventarioDeProductos,
     }
-
 
     type DetallarPago01 {
         tarjeta: String,
@@ -134,6 +163,7 @@ const ProductosInventariosTypeDefs = gql`
         tarjeta: String,
         nombre: String,
         cvc: String,
+        pin: String,
         criptomoneda: String,
         fechaVencimiento: String,
     }
