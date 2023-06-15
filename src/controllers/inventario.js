@@ -16,7 +16,7 @@ const AgregarProductos = async (parent, args, context, info) =>{
         const x = productosJson.map(async item =>{
             try {
                 console.log("item", item);
-                await Promise.all([1,2,3,4,5,6,7,8,9,10].map(async index => {
+                await Promise.all([1,2,3,4,5].map(async index => {
                     
                     await new Producto({
                         codigo: `${item?.codigo}-0${index}`,
@@ -325,6 +325,7 @@ const BuscarLosProductosDeLosInventarios = async (parent, args, context, info) =
 
   }
 }
+
 
 module.exports = {
     AgregarRegistrodeInventario,

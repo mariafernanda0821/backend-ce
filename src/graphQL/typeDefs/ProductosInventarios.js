@@ -15,9 +15,28 @@ const ProductosInventariosTypeDefs = gql`
         ): InventarioDeProductos
 
         buscarProcesoCompra: RespuestaProcesoComprax
+        procesoCompraAdmin: RespuestaProcesoCompraAdmin
         #listadoProcesosCompra: RespuestaListadoProcesosCompra
     }
 
+
+    type RespuestaProcesoCompraAdmin{
+        lista:[listaProceso]
+ 
+    }
+
+    type listaProceso {
+        _id:String
+        metodoPago:MetodoPagoX
+        status: String
+        montoTotal: Int
+        userId: User
+    }
+    type User {
+        _id: String
+        nombre: String,
+        apellido: String
+    }
     type RespuestaListadoProcesosCompra{
         metodoPago:MetodoPagoX
         status: String

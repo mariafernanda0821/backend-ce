@@ -667,6 +667,57 @@ const ListadoProcesosCompra = async (parent, args, context, info) => {
     }
 };
 
+
+
+
+const ProcesoCompraAdmin = async (parent, args, context, info) => {
+    try {
+        const token = context?.authorization;
+
+        if (!token) {
+            throw new Error("NOT_AUTHORIZED-Token invalido.");
+        }
+
+        const userId = await searchValuejwtUser(token);
+        console.log("userId userId", userId);
+
+        if (!userId?.id)
+            throw new Error("NOT_AUTHORIZED-Usuario No autorizado.");
+
+  
+      const procesosCompra = ProcesoCompra.aggregate([
+         {
+          '$lookup': {
+            'from': 'users', 
+            'localField': 'userId', 
+            'foreignField': '_id', 
+            'as': 'userId'
+          }
+        }, {
+          '$unwind': {
+            'path': '$userId', 
+            'preserveNullAndEmptyArrays': true
+          }
+        }
+      ])
+
+      return({
+        lista: procesosCompra
+      })
+
+    } catch (error) {
+        console.log(error);
+
+        const { message, extensions } = catchError(error);
+
+        throw new GraphQLError(message, {
+            extensions,
+        });
+      
+    }
+  }
+  
+
 module.exports = {
     AgregarCarrito,
     QuitarProductoCarrito,
@@ -675,4 +726,5 @@ module.exports = {
     ListarCarritoCompra,
     ProcesoDeCompra,
     ListadoProcesosCompra,
+    ProcesoCompraAdmin,
 };
